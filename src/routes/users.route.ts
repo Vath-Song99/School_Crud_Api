@@ -1,19 +1,24 @@
 import { Express } from "express";
 import { usersControllers } from "../controllers/users.controller";
 import { validateMongooseId } from "../middlewares/mongoose";
+import express from 'express'
 
-export const usersRoute = (app: Express, path: string) => {
+const Route = express.Router()
+
   // get all users
-  app.get(path, usersControllers.getUsers);
+  Route.get('/', usersControllers.getUsers);
   //get one user
-  app.get(`${path}/:id`, validateMongooseId, usersControllers.getUserById);
+  Route.get(`/:id`, validateMongooseId, usersControllers.getUserById);
 
   //create user
-  app.post(path, usersControllers.createUsers);
+  Route.post('/', usersControllers.createUsers);
 
   //update user
-  app.patch(`${path}/:id`, validateMongooseId, usersControllers.updateUser);
+  Route.patch(`/:id`, validateMongooseId, usersControllers.updateUser);
 
   //delete user
-  app.delete(`${path}/:id`, validateMongooseId, usersControllers.deleteUser);
-};
+  Route.delete(`/:id`, validateMongooseId, usersControllers.deleteUser);
+
+
+
+export {Route}

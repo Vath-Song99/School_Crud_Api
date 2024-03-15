@@ -1,6 +1,6 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
-import { usersRoute } from "./routes/users.route";
+import { Route } from "./routes/users.route";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import morgan from "morgan";
@@ -21,7 +21,8 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
 const PATH = "/users";
-usersRoute(app, PATH);
+app.use(PATH, Route )
+
 // Catch-all route for handling unknown routes
 app.all('*', (req: Request, res: Response, _next:NextFunction) => {
  
