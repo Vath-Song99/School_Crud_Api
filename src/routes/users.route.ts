@@ -1,6 +1,6 @@
-import { Express } from "express";
 import { usersControllers } from "../controllers/users.controller";
 import { validateMongooseId } from "../middlewares/mongoose";
+import {validateUser} from '../middlewares/userValidate'
 import express from 'express'
 
 const Route = express.Router()
@@ -11,7 +11,7 @@ const Route = express.Router()
   Route.get(`/:id`, validateMongooseId, usersControllers.getUserById);
 
   //create user
-  Route.post('/', usersControllers.createUsers);
+  Route.post('/', validateUser , usersControllers.createUsers);
 
   //update user
   Route.patch(`/:id`, validateMongooseId, usersControllers.updateUser);

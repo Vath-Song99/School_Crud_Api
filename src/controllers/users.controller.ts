@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../types/users";
-import mongoose from "mongoose";
 const UserModel = require("../models/users.model");
 
 export const usersControllers = {

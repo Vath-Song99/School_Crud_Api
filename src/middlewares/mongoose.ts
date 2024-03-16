@@ -1,19 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
+import {BaseCustomError} from '../utils/baseCustomError'
 
-export class BaseCustomError extends Error {
-  [x: string]: any;
-  constructor(message: string | undefined, statusCode: number) {
-    super(message); // Call the super constructor (Error class)
-    this.statusCode = statusCode; // Custom property to hold status code
-    this.name = this.constructor.name; // Set the name of the error to the class name
-    Error.captureStackTrace(this, this.constructor); // Capture stack trace
-  }
-}
-
-
-
-const validateMongooseId = (
+const validateMongooseId = async (
   req: Request,
   res: Response,
   _next: NextFunction
@@ -22,7 +11,6 @@ const validateMongooseId = (
 
   if (!mongoose.isValidObjectId(id)) {
     const customError = new BaseCustomError('id Invalide', 404);
-    console.log(customError.statusCode)
     _next(customError);
   }
   _next();
