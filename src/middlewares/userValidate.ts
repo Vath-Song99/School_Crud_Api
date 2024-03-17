@@ -6,6 +6,7 @@ const Schema = userValidation
 
 const validateUser = async (req: Request, res: Response, _next: NextFunction) =>{
         try{
+            
             Schema.parse(req.body)
 
             _next ()

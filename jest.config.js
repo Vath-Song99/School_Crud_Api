@@ -1,12 +1,12 @@
 module.exports = {
-    "roots": [
-      "<rootDir>/tests"
-    ],
-    "testMatch": [
-      "**/__tests__/**/*.+(ts|tsx|js)",
-      "**/?(*.)+(spec|test).+(ts|tsx|js)"
-    ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
-    },
-  }
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  testTimeout: 20000,
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+  testMatch: ['<rootDir>/src/**/*.test.ts'],
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
+  verbose: true,
+};
