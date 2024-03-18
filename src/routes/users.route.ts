@@ -3,9 +3,10 @@ import { validateMongooseId } from "../middlewares/mongoose";
 import {validateUser} from '../middlewares/userValidate'
 import { userValidation } from "../schema/userValidation.schema";
 import express from 'express'
+import { ZodSchema } from "zod";
 
 
-const Schema = userValidation;
+const Schema: ZodSchema = userValidation;
 const Route = express.Router()
 
   // get all users

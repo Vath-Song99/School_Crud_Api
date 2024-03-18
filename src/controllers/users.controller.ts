@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 // import { User } from "../types/users";
 import { BaseCustomError } from "../utils/baseCustomError";
 import { UserType } from "../schema/userValidation.schema";
+import { StatusCode } from "../utils/consts";
 const UserModel = require("../models/users.model");
 
 export const usersControllers = {
@@ -20,7 +21,7 @@ export const usersControllers = {
 
       //get time user request
     } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, 500));
+      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
     }
   },
 
@@ -35,14 +36,15 @@ export const usersControllers = {
       const userData: UserType = await UserModel.findById(id);
 
       if (!userData) {
-        throw new Error("Not Found");
+        throw new Error("no user Found");
       }
 
       res.status(200).json({
+        message: 'found success',
         data: userData,
       });
     } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, 500));
+      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
     }
   },
 
@@ -64,12 +66,12 @@ export const usersControllers = {
         throw new Error("user not created!");
       }
 
-      res.json({
+      res.status(201).json({
         message: "success",
         data: user,
       });
     } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, 500));
+      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
     }
   },
 
@@ -98,7 +100,7 @@ export const usersControllers = {
         data: updated,
       });
     } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, 500));
+      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
     }
   },
 
@@ -116,7 +118,7 @@ export const usersControllers = {
         error: false,
       });
     } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, 500));
+      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
     }
   },
 };
