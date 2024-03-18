@@ -50,6 +50,9 @@ export const usersControllers = {
       const userData: User = {
         username: req.body.username,
         age: req.body.age,
+        parse: function (body: any): unknown {
+          throw new Error("Function not implemented.");
+        }
       };
 
       const user = await UserModel(userData);
@@ -71,6 +74,9 @@ export const usersControllers = {
       const data: User = {
         username: req.body.username,
         age: req.body.age,
+        parse: function (body: any): unknown {
+          throw new Error("Function not implemented.");
+        }
       };
 
       await UserModel.findByIdAndUpdate(id, data);
