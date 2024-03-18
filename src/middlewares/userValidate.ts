@@ -12,7 +12,6 @@ const validateUser =  (Schema: z.ZodObject<any, any>) =>{
       try{
             
         Schema.parse(req.body)
-        
         _next ()
     }catch(error: unknown |any){
     const userError = new BaseCustomError(error.errors[0].message,401) 

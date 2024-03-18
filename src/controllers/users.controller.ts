@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { User } from "../types/users";
+// import { User } from "../types/users";
+import { BaseCustomError } from "../utils/baseCustomError";
+import { UserType } from "../schema/userValidation.schema";
 const UserModel = require("../models/users.model");
 
 export const usersControllers = {
@@ -7,15 +9,18 @@ export const usersControllers = {
     req: Request,
     res: Response,
     _next: NextFunction
-    
   ): Promise<void> => {
     try {
-      const usersData: User = await UserModel.find({});
-      res.json({data: usersData});
+      const usersData: UserType = await UserModel.find({});
+      res.json({ data: usersData });
+
+      if (!usersData) {
+        throw new Error("No data found!");
+      }
 
       //get time user request
-    } catch (error: object | any) {
-      _next(new Error("Internal Server Error"));
+    } catch (error: unknown | any) {
+      _next(new BaseCustomError(error.message, 500));
     }
   },
 
@@ -27,7 +32,7 @@ export const usersControllers = {
     try {
       const { id } = req.params;
 
-      const userData: User | null = await UserModel.findById(id);
+      const userData: UserType = await UserModel.findById(id);
 
       if (!userData) {
         throw new Error("Not Found");
@@ -36,8 +41,8 @@ export const usersControllers = {
       res.status(200).json({
         data: userData,
       });
-    } catch (error: { message: string } | any) {
-      _next(new Error(error.message));
+    } catch (error: unknown | any) {
+      _next(new BaseCustomError(error.message, 500));
     }
   },
 
@@ -47,19 +52,24 @@ export const usersControllers = {
     _next: NextFunction
   ): Promise<void> => {
     try {
-      const userData: User = {
+      const userData: UserType = {
         username: req.body.username,
         age: req.body.age,
-        parse: function (body: any): unknown {
-          throw new Error("Function not implemented.");
-        }
       };
 
       const user = await UserModel(userData);
       user.save();
-      res.json(user);
-    } catch (error: { message: string } | any) {
-      _next(new Error("Internal Server Error"));
+
+      if (!user) {
+        throw new Error("user not created!");
+      }
+
+      res.json({
+        message: "success",
+        data: user,
+      });
+    } catch (error: unknown | any) {
+      _next(new BaseCustomError(error.message, 500));
     }
   },
 
@@ -71,19 +81,24 @@ export const usersControllers = {
     try {
       const { id } = req.params;
 
-      const data: User = {
+      const data: UserType = {
         username: req.body.username,
         age: req.body.age,
-        parse: function (body: any): unknown {
-          throw new Error("Function not implemented.");
-        }
       };
 
       await UserModel.findByIdAndUpdate(id, data);
       const updated = await UserModel.findById(id);
-      res.json(updated);
-    } catch (error: { message: string } | any) {
-      _next(new Error("Internal Server Error"));
+
+      if (!updated) {
+        throw new Error("user could be not updated!");
+      }
+
+      res.json({
+        message: "updated success",
+        data: updated,
+      });
+    } catch (error: unknown | any) {
+      _next(new BaseCustomError(error.message, 500));
     }
   },
 
@@ -100,8 +115,8 @@ export const usersControllers = {
         message: "Delete successfully!",
         error: false,
       });
-    } catch (error: { message: string } | any) {
-      _next(new Error("Internal Server Error"));
+    } catch (error: unknown | any) {
+      _next(new BaseCustomError(error.message, 500));
     }
   },
 };
