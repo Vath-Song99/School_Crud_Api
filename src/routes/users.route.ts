@@ -23,6 +23,9 @@ const Route = express.Router()
   //delete user
   Route.delete(`/:id`, validateMongooseId, usersControllers.deleteUser);
 
+  //delete all users
+  Route.delete('/', usersControllers.deleteAllusers )
+
 
 
 export {Route}

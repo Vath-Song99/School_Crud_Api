@@ -15,7 +15,7 @@ const validateUser =  (Schema: ZodSchema) =>{
         Schema.parse(req.body)
         _next ()
     }catch(error: unknown |any){
-    const userError = new BaseCustomError('username or age is incorrect', StatusCode.Unauthorized) 
+    const userError = new BaseCustomError('username or password is incorrect', StatusCode.Unauthorized) 
         console.log(error)
         _next(userError)
     }

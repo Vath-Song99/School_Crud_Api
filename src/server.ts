@@ -5,7 +5,7 @@ import app from './app'
 // Connect to database
 connectToDatabase();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`[Server] is running on port ${PORT}`);
 });
