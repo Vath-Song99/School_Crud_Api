@@ -20,10 +20,12 @@ export const usersControllers = {
       res
         .status(StatusCode.OK)
         .json({ message: "GET success", data: usersData });
-    } catch (error: unknown | any) {
+    } catch (error: unknown) {
       console.log('hi', error)
+        if(error instanceof BaseCustomError){
+          _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
 
-      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
+        }
     }
   },
 

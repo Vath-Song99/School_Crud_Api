@@ -6,7 +6,7 @@ class UsersRepository {
     // static updateUser: any;
   
     async getUserById (id: string) {
-        return await  userModel.findById(id)
+        return await  userModel.findById({_id: id})
     }
     
     async getUsers (){
@@ -18,7 +18,7 @@ class UsersRepository {
         return userCreated.save()
     }
 
-    public  async updateUser (id: string, user: UserType | null){
+    async updateUser (id: string, user: UserType | null){
         return await userModel.findByIdAndUpdate({_id: id}, user)
     }
 

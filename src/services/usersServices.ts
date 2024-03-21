@@ -14,7 +14,7 @@ class UsersServices {
 
   async getUsers() {
     try{
-      console.log('hel',)
+   
       return await this.repository.getUsers();
     }catch(error: unknown | any){
       console.log(error)

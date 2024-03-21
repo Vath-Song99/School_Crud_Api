@@ -1,32 +1,19 @@
-// utils/test-utils/dbHandler.utils.js
+import { MongoMemoryServer } from "mongodb-memory-server";
+import mongoose from "mongoose";
 
-const mongoose = require('mongoose');
-// const { MongoMemoryServer } = require('mongodb-memory-server');
-import {MongoMemoryServer} from 'mongodb-memory-server'
+let mongoServer: MongoMemoryServer;
 
-
-const mongoServer = new MongoMemoryServer();
-export const dbConnect = async () => {
-  try{
-    await mongoServer.start()
-    const uri = await mongoServer.getUri();
-
-    const mongooseOpts = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      bufferCommands: false, // Disable buffering
-      bufferTimeoutMS: 20000, // Set a higher timeout value (in milliseconds)
-    };
+const handleConnectToMongoServer = () =>{
+  beforeAll(async () => {
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+    await mongoose.connect(mongoUri);
+  });
   
-   return await mongoose.connect(uri, mongooseOpts)
-  }
-  catch(error: unknown | any){
-    console.log('external:',error)
-  }
-};
+  afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+  });
+}
 
-export const dbDisconnect = async () => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
-  await mongoServer.stop();
-};
+export {handleConnectToMongoServer}

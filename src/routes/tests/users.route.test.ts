@@ -37,10 +37,10 @@ describe("/users", () => {
     const response = await request(app).post("/users").send(userData).expect(201).expect('Content-Type', 'application/json; charset=utf-8')
 
 
+    expect(response.body.data).toBeDefined();
     expect(response.body.message).toEqual("POST success");
     expect(response.body.data.username).toEqual('test');
     expect(response.body.data.age).toEqual(7)
-    expect(response.body.data).toBeDefined();
 
   });
 
