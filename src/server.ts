@@ -6,6 +6,12 @@ import app from './app'
 connectToDatabase();
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log(`[Server] is running on port ${PORT}`);
-});
+
+const startServer = async () =>{
+  app.listen(PORT, () => {
+    console.log(`[Server] is running on port ${PORT}`);
+  });
+
+}
+
+startServer()

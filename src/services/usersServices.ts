@@ -2,7 +2,7 @@ import { UsersRepository } from "../databases/repositories/usersRepository";
 import { UserType } from "../schema/userValidation.schema";
 
 class UsersServices {
-  public repository: UsersRepository;
+   repository: UsersRepository;
 
   constructor() {
     this.repository = new UsersRepository();
@@ -13,10 +13,16 @@ class UsersServices {
   }
 
   async getUsers() {
-    return await this.repository.getUsers();
+    try{
+      console.log('hel',)
+      return await this.repository.getUsers();
+    }catch(error: unknown | any){
+      console.log(error)
+    }
   }
 
   async createUser(user: UserType | null) {
+    
     return await this.repository.createUser(user);
   }
 

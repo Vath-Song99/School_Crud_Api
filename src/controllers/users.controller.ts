@@ -1,11 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-// import { User } from "../types/users";
 import { BaseCustomError } from "../utils/baseCustomError";
 import { UserType } from "../schema/userValidation.schema";
 import { StatusCode } from "../utils/consts";
 import { UsersServices } from "../services/usersServices";
-
-const userServices = new UsersServices();
 
 export const usersControllers = {
   getUsers: async (
@@ -13,6 +10,7 @@ export const usersControllers = {
     res: Response,
     _next: NextFunction
   ): Promise<void> => {
+    const userServices = new UsersServices();
     try {
       const usersData: UserType | null = await userServices.getUsers();
 
@@ -23,6 +21,8 @@ export const usersControllers = {
         .status(StatusCode.OK)
         .json({ message: "GET success", data: usersData });
     } catch (error: unknown | any) {
+      console.log('hi', error)
+
       _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
     }
   },
@@ -32,6 +32,9 @@ export const usersControllers = {
     res: Response,
     _next: NextFunction
   ): Promise<void | Response> => {
+    const userServices = new UsersServices();
+    // const user =  await userModel.find({});
+
     try {
       const { id } = req.params;
 
@@ -40,7 +43,7 @@ export const usersControllers = {
       if (!userData) {
         throw new Error("no user Found");
       }
-      res.status(200).json({
+      res.status(StatusCode.OK).json({
         message: "found success",
         data: userData,
       });
@@ -54,6 +57,9 @@ export const usersControllers = {
     res: Response,
     _next: NextFunction
   ): Promise<void> => {
+
+    const userServices = new UsersServices();
+
     try {
       const userData: UserType = {
         username: req.body.username,
@@ -79,6 +85,7 @@ export const usersControllers = {
     res: Response,
     _next: NextFunction
   ): Promise<void> => {
+    const userServices = new UsersServices();
     try {
       const { id } = req.params;
 
@@ -106,6 +113,8 @@ export const usersControllers = {
     res: Response,
     _next: NextFunction
   ): Promise<void> => {
+    const userServices = new UsersServices();
+
     try {
       const { id } = req.params;
 
@@ -123,22 +132,22 @@ export const usersControllers = {
       _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
     }
   },
-  deleteAllusers: async (req: Request, res: Response, _next: NextFunction) =>{
-    try{
-      const deleted = await userServices.deleteAllUsers()
+  deleteAllusers: async (req: Request, res: Response, _next: NextFunction) => {
+    const userServices = new UsersServices();
 
-      if(!deleted){
-        throw new Error('users could be not deleted!');
+    try {
+      const deleted = await userServices.deleteAllUsers();
+
+      if (!deleted) {
+        throw new Error("users could be not deleted!");
       }
 
       res.status(StatusCode.OK).json({
         message: "DELETE successfully!",
-        error: false
-      })
-
-    }catch(error: unknown | any){
-      _next(new BaseCustomError(error.message, StatusCode.InternalServerError
-        ))
+        error: false,
+      });
+    } catch (error: unknown | any) {
+      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
     }
-  }
+  },
 };
