@@ -1,15 +1,7 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import request from 'supertest';
-import connectToDatabase from '../connecToDb';
 import { handleConnectToMongoServer } from '../mongoMemoryServer ';
 import app from '../../app';
-
-dotenv.config();
-
-const URL = process.env.MONGODB_URI || '';
-let server: any;
-
 
 handleConnectToMongoServer()
 

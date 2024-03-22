@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BaseCustomError } from "../../utils/baseCustomError";
+import { BaseCustomError } from "../../errors/baseCustomError";
 import { StatusCode } from "../../utils/consts";
 import { handleConnectToMongoServer } from "../../utils/mongoMemoryServer ";
 import errorHandler from "../errorHandler";

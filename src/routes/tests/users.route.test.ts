@@ -19,20 +19,20 @@ describe("User API endpoints", () => {
   });
 
   test("POST /users should create a new user", async () => {
+
+    const MOCK_USER = { username: 'Hello test', age: 8}
+
     const response = await request(app)
       .post("/users")
-      .send({
-        username: "test",
-        age: 7,
-      })
+      .send(MOCK_USER)
       .expect(201)
       .expect("Content-Type", "application/json; charset=utf-8");
 
     userId = response.body.data._id;
     expect(response.body.data).toBeDefined();
     expect(response.body.message).toEqual("POST success");
-    expect(response.body.data.username).toEqual("test");
-    expect(response.body.data.age).toEqual(7);
+    expect(response.body.data.username).toEqual(MOCK_USER.username);
+    expect(response.body.data.age).toEqual(MOCK_USER.age);
   });
 
   test("PATCH /users/:id should update an existing user", async () => {

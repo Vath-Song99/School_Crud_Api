@@ -1,4 +1,4 @@
-import { BaseCustomError } from '../baseCustomError';
+import { BaseCustomError } from '../../errors/baseCustomError';
 
 describe('BaseCustomError', () => {
   it('should create an instance of BaseCustomError', () => {

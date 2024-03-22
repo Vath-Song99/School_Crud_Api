@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { BaseCustomError } from '../utils/baseCustomError';
+import { BaseCustomError } from '../errors/baseCustomError';
 
 
 // Global error handler middleware

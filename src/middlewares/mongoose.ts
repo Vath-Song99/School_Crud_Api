@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-import {BaseCustomError} from '../utils/baseCustomError'
+import {BaseCustomError} from '../errors/baseCustomError'
 import { StatusCode } from "../utils/consts";
 
 const validateMongooseId = async (
@@ -11,7 +11,7 @@ const validateMongooseId = async (
   const { id } = req.params;
 
   if (!mongoose.isValidObjectId(id)) {
-    const customError = new BaseCustomError('id Invalide', StatusCode.NotFound);
+    const customError = new BaseCustomError('Id is invalide', StatusCode.NotFound);
     _next(customError);
   }
   _next();

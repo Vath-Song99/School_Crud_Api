@@ -1,38 +1,41 @@
 import { UserType } from "../../schema/userValidation.schema";
-import { BaseCustomError } from "../../utils/baseCustomError";
+import { BaseCustomError } from "../../errors/baseCustomError";
 import { StatusCode } from "../../utils/consts";
+import APIError from "../../errors/apiError";
 const userModel = require("../models/users.model");
 
 class UsersRepository {
-  static updateUser: any;
-  // static updateUser: any;
 
-  async getUserById(id: string) {
+  async getUserById(id: string): Promise<any> {
     try {
       const userData = await userModel.findById({ _id: id });
 
       if (!userData) {
-        throw new Error("No data found!");
+        throw new BaseCustomError("No data found!",  StatusCode.NotFound);
       }
       return userData;
     } catch (error: unknown) {
       if (error instanceof BaseCustomError) {
-        throw new BaseCustomError(error.message, StatusCode.NotFound);
+        throw error
+      }else{
+        throw new APIError("Unable to find user in database")
       }
     }
   }
 
-  async getUsers() {
+  async getUsers(): Promise<any> {
     try{
         const usersData = await userModel.find();
 
         if (!usersData) {
-          throw new Error("No data found!");
+          throw new BaseCustomError("No data found!", StatusCode.NotFound);
         }
         return usersData;
     }catch(error: unknown){
         if(error instanceof BaseCustomError){
-            throw new BaseCustomError(error.message, StatusCode.NotFound);
+            throw error
+        }else{
+          throw new APIError("Unable to find user in database")
         }
     }
   }

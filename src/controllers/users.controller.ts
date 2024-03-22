@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BaseCustomError } from "../utils/baseCustomError";
+import { BaseCustomError } from "../errors/baseCustomError";
 import { UserType } from "../schema/userValidation.schema";
 import { StatusCode } from "../utils/consts";
 import { UsersServices } from "../services/usersServices";
@@ -19,9 +19,7 @@ export const usersControllers = {
         .json({ message: "GET success", data: usersData });
     } catch (error: unknown) {
       if (error instanceof BaseCustomError) {
-        _next(
-          new BaseCustomError(error.message, StatusCode.InternalServerError)
-        );
+        _next(error);
       }
     }
   },
@@ -45,9 +43,7 @@ export const usersControllers = {
       });
     } catch (error: unknown) {
       if (error instanceof BaseCustomError) {
-        _next(
-          new BaseCustomError(error.message, StatusCode.InternalServerError)
-        );
+        _next(error);
       }
     }
   },
