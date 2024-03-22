@@ -3,8 +3,7 @@ import { userValidation } from "../../schema/userValidation.schema";
 import { validateUser } from "../userValidate";
 import { handleConnectToMongoServer } from "../../utils/mongoMemoryServer ";
 
-
-handleConnectToMongoServer()
+handleConnectToMongoServer();
 
 describe("validateInput middleware", () => {
   let res: Partial<Response>;

@@ -7,6 +7,7 @@ import morgan from "morgan";
 import { swaggerDocument } from "./utils/swagger";
 import  requestTimeMiddleware from "./middlewares/requestTime";
 import  errorHandler from "./middlewares/errorHandler";
+import { StatusCode } from "./utils/consts";
 
 dotenv.config();
 const app: Application = express();
@@ -20,6 +21,11 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
 const PATH = "/users";
+app.get('/', async (req: Request, res:Response) =>{
+  res.status(StatusCode.OK).json({
+    message: "what is taht"
+  })
+})
 app.use(PATH, Route )
 
 // Catch-all route for handling unknown routes

@@ -14,18 +14,15 @@ export const usersControllers = {
     try {
       const usersData: UserType | null = await userServices.getUsers();
 
-      if (!usersData) {
-        throw new Error("No data found!");
-      }
       res
         .status(StatusCode.OK)
         .json({ message: "GET success", data: usersData });
     } catch (error: unknown) {
-      console.log('hi', error)
-        if(error instanceof BaseCustomError){
-          _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
-
-        }
+      if (error instanceof BaseCustomError) {
+        _next(
+          new BaseCustomError(error.message, StatusCode.InternalServerError)
+        );
+      }
     }
   },
 
@@ -42,15 +39,16 @@ export const usersControllers = {
 
       const userData: UserType | null = await userServices.getUserById(id);
 
-      if (!userData) {
-        throw new Error("no user Found");
-      }
       res.status(StatusCode.OK).json({
         message: "found success",
         data: userData,
       });
-    } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
+    } catch (error: unknown) {
+      if (error instanceof BaseCustomError) {
+        _next(
+          new BaseCustomError(error.message, StatusCode.InternalServerError)
+        );
+      }
     }
   },
 
@@ -59,7 +57,6 @@ export const usersControllers = {
     res: Response,
     _next: NextFunction
   ): Promise<void> => {
-
     const userServices = new UsersServices();
 
     try {
@@ -70,15 +67,16 @@ export const usersControllers = {
 
       const user: UserType | null = await userServices.createUser(userData);
 
-      if (!user) {
-        throw new Error("user not created!");
-      }
       res.status(StatusCode.Created).json({
         message: "POST success",
         data: user,
       });
-    } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
+    } catch (error: unknown) {
+      if (error instanceof BaseCustomError) {
+        _next(
+          new BaseCustomError(error.message, StatusCode.InternalServerError)
+        );
+      }
     }
   },
 
@@ -98,15 +96,16 @@ export const usersControllers = {
 
       const updated = await userServices.updateUser(id, data);
 
-      if (!updated) {
-        throw new Error("user could be not updated!");
-      }
-      res.status(StatusCode.OK).json({
+      res.status(StatusCode.Created).json({
         message: "PATCH success",
         data: updated,
       });
-    } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
+    } catch (error: unknown) {
+      if (error instanceof BaseCustomError) {
+        _next(
+          new BaseCustomError(error.message, StatusCode.InternalServerError)
+        );
+      }
     }
   },
 
@@ -120,36 +119,35 @@ export const usersControllers = {
     try {
       const { id } = req.params;
 
-      const deleted = await userServices.deleteOneUser(id);
+      await userServices.deleteOneUser(id);
 
-      console.log(deleted);
-      if (deleted.deletedCount === 0) {
-        throw new Error("user could be not deleted!");
-      }
       res.status(StatusCode.OK).json({
         message: "DELETE successfully!",
         error: false,
       });
-    } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
+    } catch (error: unknown) {
+      if (error instanceof BaseCustomError) {
+        _next(
+          new BaseCustomError(error.message, StatusCode.InternalServerError)
+        );
+      }
     }
   },
   deleteAllusers: async (req: Request, res: Response, _next: NextFunction) => {
     const userServices = new UsersServices();
-
     try {
-      const deleted = await userServices.deleteAllUsers();
-
-      if (!deleted) {
-        throw new Error("users could be not deleted!");
-      }
+      await userServices.deleteAllUsers();
 
       res.status(StatusCode.OK).json({
         message: "DELETE successfully!",
         error: false,
       });
-    } catch (error: unknown | any) {
-      _next(new BaseCustomError(error.message, StatusCode.InternalServerError));
+    } catch (error: unknown) {
+      if (error instanceof BaseCustomError) {
+        _next(
+          new BaseCustomError(error.message, StatusCode.InternalServerError)
+        );
+      }
     }
   },
 };

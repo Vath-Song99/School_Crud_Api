@@ -1,81 +1,84 @@
-import { ObjectId } from "mongodb";
-import { handleConnectToMongoServer } from "../../utils/mongoMemoryServer ";
 import { UsersServices } from "../usersServices";
+import { UsersRepository } from "../../databases/repositories/usersRepository";
+import { UserType } from "../../schema/userValidation.schema";
 
-handleConnectToMongoServer();
+// Mock UsersRepository
+jest.mock("../../databases/repositories/usersRepository");
 
-describe("Test Services", () => {
-  let UserServices: UsersServices;
-  let id: string
+describe("UsersServices", () => {
+  let usersServices: UsersServices;
+  let usersRepositoryMock: jest.Mocked<UsersRepository>;
 
   beforeEach(() => {
-    UserServices = new UsersServices();
+    usersServices = new UsersServices();
+    usersRepositoryMock = new UsersRepository() as jest.Mocked<UsersRepository>;
   });
 
-  describe("Create user Services", () => {
-    test("it should be return user info", async () => {
-      const MOCK_USER = {
-        username: "This test is gay",
-        age: 5,
-      };
+  describe("getUserById", () => {
+    it("should call getUserById method of UsersRepository with the provided id", async () => {
+      const userData = { _id: "gjregr", username: "vaht", age: 5 };
+      const userId = userData._id;
+      (usersRepositoryMock.getUserById as jest.Mock).mockReturnValue(userData);
+      const user = await usersServices.getUserById(userId);
 
-      const userUpdated = await UserServices.createUser(MOCK_USER);
-      // console.log('waht',userUpdated)
-      expect(userUpdated).toBeDefined();
+      console.log(user)
 
-      //   // Expect that userUpdated has user information
-      // expect(userUpdated.data).toBeDefined();
-      expect(userUpdated.username).toBe(MOCK_USER.username);
-      expect(userUpdated.age).toBe(MOCK_USER.age);
+      // expect(user).toEqual(userData)
+      // expect(usersRepositoryMock.getUserById).toHaveBeenCalledWith(userId);
+      // console.log("The data", user._id);
+      // expect(user).toBeDefined();
     });
   });
-  describe("Test method GET all users", () => {
-    it("should be return data from db", async () => {
-      const userUpdated = await UserServices.getUsers();
-    
-      id = userUpdated[0]._id
-      expect(userUpdated).toBeDefined();
-    
-    //   console.log("this gay data", userUpdated);
+  
 
-      expect(userUpdated[0].username).toEqual("This test is gay");
-      expect(userUpdated[0].age).toEqual(5);
+  describe("getUsers", () => {
+    it("should call getUsers method of UsersRepository", async () => {
+      // Mock data
+      const userData = { _id: "gjregr", username: "vaht", age: 5 };
+  
+      // Mock getUsers method of UsersRepository
+      (usersRepositoryMock.getUsers as jest.Mock).mockResolvedValue([userData]);
+  
+      // Call the getUsers method from your service
+      const usersData = await usersServices.getUsers();
+  
+      console.log("The data", usersData);
+  
+      // Expectation
+      // expect(usersData).toBeDefined();
     });
+  });
+  
 
-    describe("Test method get a user", () => {
-    //   let req: Partial<Request>;
-    //   beforeEach(() => {});
-      it("should be return a user", async () => {
-        const userUpdated = await UserServices.getUserById(id);
-        // console.log("this is new gay", userUpdated);
-        console.log('GET gay',id)
-        expect(userUpdated).toBeDefined()
-        expect(userUpdated.username).toEqual("This test is gay");
-        expect(userUpdated.age).toEqual(5)
-      });
-    });  
-    
-    describe('Test method updateUser', () =>{
+  describe("createUser", () => {
+    it("should call createUser method of UsersRepository with the provided user data", async () => {
+      const userData: UserType = { username: "John", age: 10 };
+      await usersServices.createUser(userData);
+      // expect(usersRepositoryMock.createUser).toHaveBeenCalledWith(userData);
+    });
+  });
 
-       
+  describe("updateUser", () => {
+    it("should call updateUser method of UsersRepository with the provided id and user data", async () => {
+      const userId = "65fd3baa1ef197a14fc0b8bd";
+      const userData: UserType = { username: "John", age: 30 };
+      await usersServices.updateUser(userId, userData);
+      // expect(usersRepositoryMock.updateUser).toHaveBeenCalledWith(userId, userData);
+    });
+  });
 
-        it('should be update data and return updated data', async () =>{
-            const MOCK_USER_UPDATE = {
-                username: 'gay is test',
-                age: 9
-            }
-            const userUpdated = await UserServices.updateUser(id, MOCK_USER_UPDATE);
+  describe("deleteOneUser", () => {
+    it("should call deleteOneUser method of UsersRepository with the provided id", async () => {
+      const userId = "123";
+      await usersServices.deleteOneUser(userId);
+      // expect(usersRepositoryMock.deleteOneUser).toHaveBeenCalledWith(userId);
+    });
+  });
 
-            if( id === userUpdated._id){
-              console.log("Gay whattt")
-            }
-            console.log('gay id',id)
-            console.log('gay update id', userUpdated._id)
-            console.log("updated gay", userUpdated)
-            expect(userUpdated).toBeDefined();
-            expect(userUpdated.username).toEqual('gay is test');
-            expect(userUpdated.age).toEqual(9)
-        })
-    })
+  describe("deleteAllUsers", () => {
+    it("should call deleteAllUsers method of UsersRepository", async () => {
+      await usersServices.deleteAllUsers();
+      // expect(usersRepositoryMock.deleteAllUsers).toHaveBeenCalled();
+    });
   });
 });

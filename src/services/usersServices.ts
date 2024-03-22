@@ -1,5 +1,7 @@
 import { UsersRepository } from "../databases/repositories/usersRepository";
 import { UserType } from "../schema/userValidation.schema";
+import { BaseCustomError } from "../utils/baseCustomError";
+import { StatusCode } from "../utils/consts";
 
 class UsersServices {
    repository: UsersRepository;
@@ -9,15 +11,22 @@ class UsersServices {
   }
 
   async getUserById(id: string) {
-    return await this.repository.getUserById(id);
+      try{
+        return await this.repository.getUserById(id);
+      }catch(error: unknown){
+        if(error instanceof BaseCustomError){
+          throw new BaseCustomError("Internal server error",StatusCode.InternalServerError)
+        }
+      }
   }
 
   async getUsers() {
     try{
-   
       return await this.repository.getUsers();
-    }catch(error: unknown | any){
-      console.log(error)
+    }catch(error: unknown){
+      if(error instanceof BaseCustomError){
+        throw new BaseCustomError("Internal server error",StatusCode.InternalServerError)
+      }
     }
   }
 
