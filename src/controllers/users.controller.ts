@@ -18,9 +18,7 @@ export const usersControllers = {
         .status(StatusCode.OK)
         .json({ message: "GET success", data: usersData });
     } catch (error: unknown) {
-      if (error instanceof BaseCustomError) {
-        _next(error);
-      }
+      _next(error);
     }
   },
 
@@ -42,9 +40,7 @@ export const usersControllers = {
         data: userData,
       });
     } catch (error: unknown) {
-      if (error instanceof BaseCustomError) {
-        _next(error);
-      }
+      _next(error);
     }
   },
 
@@ -69,11 +65,7 @@ export const usersControllers = {
         data: user,
       });
     } catch (error: unknown) {
-      if (error instanceof BaseCustomError) {
-        _next(
-          new BaseCustomError(error.message, StatusCode.InternalServerError)
-        );
-      }
+      _next(error);
     }
   },
 
@@ -99,11 +91,7 @@ export const usersControllers = {
         data: updated,
       });
     } catch (error: unknown) {
-      if (error instanceof BaseCustomError) {
-        _next(
-          new BaseCustomError(error.message, StatusCode.InternalServerError)
-        );
-      }
+      _next(error);
     }
   },
 
@@ -124,11 +112,7 @@ export const usersControllers = {
         error: false,
       });
     } catch (error: unknown) {
-      if (error instanceof BaseCustomError) {
-        _next(
-          new BaseCustomError(error.message, StatusCode.InternalServerError)
-        );
-      }
+      _next(error);
     }
   },
   deleteAllusers: async (req: Request, res: Response, _next: NextFunction) => {
@@ -141,11 +125,7 @@ export const usersControllers = {
         error: false,
       });
     } catch (error: unknown) {
-      if (error instanceof BaseCustomError) {
-        _next(
-          new BaseCustomError(error.message, StatusCode.InternalServerError)
-        );
-      }
+      _next(error);
     }
   },
 };

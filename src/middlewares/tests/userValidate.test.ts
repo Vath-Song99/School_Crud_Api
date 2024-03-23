@@ -23,7 +23,9 @@ describe("validateInput middleware", () => {
 
     const req: Partial<Request> = {
       body: {
-        fullname: "sokritha",
+        username: "sokritha",
+        password: "SmeourySongvat",
+        age: 8
       },
     };
 
@@ -38,7 +40,9 @@ describe("validateInput middleware", () => {
     next = jest.fn();
     const req = {
       body: {
-        fullname: "so",
+        username: "sokritha",
+        password: "SmeourySongvat",
+        age: 8
       },
     }; // Provide invalid data for your testSchema
 

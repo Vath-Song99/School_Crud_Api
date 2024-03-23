@@ -42,15 +42,27 @@ class UsersServices {
   }
 
   async updateUser(id: string, user: UserType | null) {
-    return await this.repository.updateUser(id, user);
+    try {
+      return await this.repository.updateUser(id, user);
+    } catch (error: unknown) {
+      throw error;
+    }
   }
 
   async deleteOneUser(id: string) {
-    return await this.repository.deleteOneUser(id);
+    try {
+      return await this.repository.deleteOneUser(id);
+    } catch (error: unknown) {
+      throw error;
+    }
   }
 
   async deleteAllUsers() {
-    return await this.repository.deleteAllUsers();
+    try {
+      return await this.repository.deleteAllUsers();
+    } catch (error: unknown) {
+      throw error;
+    }
   }
 }
 

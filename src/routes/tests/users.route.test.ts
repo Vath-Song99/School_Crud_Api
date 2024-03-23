@@ -42,7 +42,6 @@ describe("User API endpoints", () => {
       .send({ username: "gay is test", age: 8 })
       .expect(201);
 
-    console.log('User updated:', response.body.data);
     expect(response.body.data).toBeDefined();
     // Add more assertions if needed
   });
