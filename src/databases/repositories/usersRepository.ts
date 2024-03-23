@@ -41,6 +41,7 @@ class UsersRepository {
   }
 
   async createUser(user: UserType | null) {
+
     const userCreated = await userModel(user);
 
     if (!userCreated) {
