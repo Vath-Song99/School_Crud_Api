@@ -1,5 +1,6 @@
 import { UsersRepository } from "../databases/repositories/usersRepository";
 import { UserType } from "../schema/userValidation.schema";
+import { generatePassword } from "../utils/generatePassword";
 
 class UsersServices {
    repository: UsersRepository;
@@ -25,8 +26,13 @@ class UsersServices {
   }
 
   async createUser(user: UserType | null) {
-    
-    return await this.repository.createUser(user);
+
+    const {password} = user as UserType;
+
+    const hashPassword = await generatePassword(password)
+    const {username, age} = user as UserType;
+
+    return await this.repository.createUser({username, password: hashPassword , age});
   }
 
   async updateUser (id: string, user: UserType | null){

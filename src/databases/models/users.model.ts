@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 interface User extends Document {
     username: string;
+    password: string;
     age: number;
     createdAt: Date;
 }
@@ -11,6 +12,12 @@ interface User extends Document {
         type: String,
         minlength: 3,
         maxlength: 25,
+        required: true
+    },
+    password: {
+        type: String,
+        min: 8,
+        max: 25,
         required: true
     },
     age: {

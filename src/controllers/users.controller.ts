@@ -58,6 +58,7 @@ export const usersControllers = {
     try {
       const userData: UserType = {
         username: req.body.username,
+        password: req.body.password,
         age: req.body.age,
       };
 
@@ -87,6 +88,7 @@ export const usersControllers = {
 
       const data: UserType = {
         username: req.body.username,
+        password: req.body.password,
         age: req.body.age,
       };
 

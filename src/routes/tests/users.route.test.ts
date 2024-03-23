@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../../app";
 import { handleConnectToMongoServer } from "../../utils/mongoMemoryServer ";
+import { UserType } from "../../schema/userValidation.schema";
 
 // Connect to mongo-memory-server
 handleConnectToMongoServer();
@@ -20,7 +21,7 @@ describe("User API endpoints", () => {
 
   test("POST /users should create a new user", async () => {
 
-    const MOCK_USER = { username: 'Hello test', age: 8}
+    const MOCK_USER:UserType = { username: 'Hello test', password: "Songvatgg", age: 8}
 
     const response = await request(app)
       .post("/users")

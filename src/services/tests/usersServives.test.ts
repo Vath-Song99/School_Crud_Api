@@ -12,7 +12,7 @@ describe("UsersServices", () => {
 
   describe("getUserById", () => {
     it("should call getUserById method of UsersRepository with the provided id", async () => {
-      const MOCK_USER = { _id: "gjregr", username: "vaht", age: 5 };
+      const MOCK_USER = { _id: "gjregr", username: "vaht", password: "gegeggegege", age: 5 };
       const userId = MOCK_USER._id;
 
       (usersServices.repository.getUserById as jest.Mock).mockReturnValue(MOCK_USER);
@@ -27,7 +27,7 @@ describe("UsersServices", () => {
 
   describe("getUsers", () => {
     it("should return users from the repository", async () => {
-      const MOCK_USER: Array<UserType> = [{username: "Hello test", age:8}];
+      const MOCK_USER: Array<UserType> = [{ username: "vaht", password: "gegeggegege", age: 5 }];
 
       // Mock the getUsers method of UserRepository to return dummy data
       (usersServices.repository.getUsers as jest.Mock).mockResolvedValue(MOCK_USER);
@@ -51,7 +51,7 @@ describe("UsersServices", () => {
   })
     describe("createUser", () => {
       it("should call createUser method of UsersRepository with the provided user data", async () => {
-        const userData: UserType = { username: "John", age: 10 };
+        const userData: UserType = { username: "vaht", password: "gegeggegege", age: 5 };
         await usersServices.createUser(userData);
         // expect(usersRepositoryMock.createUser).toHaveBeenCalledWith(userData);
       });
@@ -60,7 +60,7 @@ describe("UsersServices", () => {
     describe("updateUser", () => {
       it("should call updateUser method of UsersRepository with the provided id and user data", async () => {
         const userId = "65fd3baa1ef197a14fc0b8bd";
-        const userData: UserType = { username: "John", age: 30 };
+        const userData: UserType = { username: "vaht", password: "gegeggegege", age: 5 };
         await usersServices.updateUser(userId, userData);
         // expect(usersRepositoryMock.updateUser).toHaveBeenCalledWith(userId, userData);
       });
