@@ -20,7 +20,7 @@ app.use(requestTimeMiddleware);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
-const PATH = "/users";
+const PATH = "/api/users";
 app.get('/', async (req: Request, res:Response) =>{
   res.status(StatusCode.OK).json({
     message: "what is taht"

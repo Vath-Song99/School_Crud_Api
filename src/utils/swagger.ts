@@ -6,10 +6,13 @@ export const swaggerDocument = {
       description: 'API to manage userss',
       version: '1.0.0',
     },
+    services: {
+      url: "http://127.0.0.1:3001:/api/v1"
+    },
     paths: {
       '/users': {
         get: {
-          summary: 'Get all userss',
+          summary: 'Get all users',
           responses: {
             '200': {
               description: 'List of userss',

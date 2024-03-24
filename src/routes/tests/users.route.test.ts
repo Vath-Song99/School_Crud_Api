@@ -13,18 +13,18 @@ describe("User API endpoints", () => {
     // Add any setup logic here
   });
 
-  test("GET /users should return list of users", async () => {
-    const response = await request(app).get("/users").expect(200);
+  test("GET /api/users should return list of users", async () => {
+    const response = await request(app).get("/api/users").expect(200);
 
     expect(response.body.data).toBeDefined();
   });
 
-  test("POST /users should create a new user", async () => {
+  test("POST /api/users should create a new user", async () => {
 
     const MOCK_USER:UserType = { username: 'Hello test', password: "Songvatgg", age: 8}
 
     const response = await request(app)
-      .post("/users")
+      .post("/api/users")
       .send(MOCK_USER)
       .expect(201)
       .expect("Content-Type", "application/json; charset=utf-8");
@@ -36,9 +36,9 @@ describe("User API endpoints", () => {
     expect(response.body.data.age).toEqual(MOCK_USER.age);
   });
 
-  test("PATCH /users/:id should update an existing user", async () => {
+  test("PATCH /api/users/:id should update an existing user", async () => {
     const response = await request(app)
-      .patch(`/users/${userId}`)
+      .patch(`/api/users/${userId}`)
       .send({ username: "gay is test", age: 8 })
       .expect(201);
 
@@ -46,8 +46,8 @@ describe("User API endpoints", () => {
     // Add more assertions if needed
   });
 
-  test("DELETE /users/:id should delete a user", async () => {
-    const response = await request(app).delete(`/users/${userId}`).expect(200);
+  test("DELETE /api/users/:id should delete a user", async () => {
+    const response = await request(app).delete(`/api/users/${userId}`).expect(200);
 
     expect(response.body.message).toEqual('DELETE successfully!');
   });
