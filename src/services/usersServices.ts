@@ -1,5 +1,5 @@
 import { UsersRepository } from "../databases/repositories/usersRepository";
-import { UserType } from "../schema/userValidation.schema";
+import { UserType } from "../schemas/userValidation.schema";
 import { generatePassword } from "../utils/generatePassword";
 
 class UsersServices {

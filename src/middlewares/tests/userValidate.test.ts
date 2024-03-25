@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { userValidation } from "../../schema/userValidation.schema";
+import { userValidation } from "../../schemas/userValidation.schema";
 import { validateUser } from "../userValidate";
 import { handleConnectToMongoServer } from "../../utils/mongoMemoryServer ";
 

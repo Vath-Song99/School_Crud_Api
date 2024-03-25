@@ -1,7 +1,7 @@
 import { usersControllers } from "../controllers/users.controller";
 import { validateMongooseId } from "../middlewares/mongoose";
 import {validateUser} from '../middlewares/userValidate'
-import { userValidation } from "../schema/userValidation.schema";
+import { userValidation } from "../schemas/userValidation.schema";
 import express from 'express'
 import { ZodSchema } from "zod";
 

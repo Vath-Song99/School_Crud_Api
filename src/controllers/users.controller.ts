@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { BaseCustomError } from "../errors/baseCustomError";
-import { UserType } from "../schema/userValidation.schema";
+import { UserType } from "../schemas/userValidation.schema";
 import { StatusCode } from "../utils/consts";
 import { UsersServices } from "../services/usersServices";
 

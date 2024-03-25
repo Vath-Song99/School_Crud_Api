@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../app";
 import { handleConnectToMongoServer } from "../../utils/mongoMemoryServer ";
-import { UserType } from "../../schema/userValidation.schema";
+import { UserType } from "../../schemas/userValidation.schema";
 
 // Connect to mongo-memory-server
 handleConnectToMongoServer();

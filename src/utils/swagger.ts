@@ -1,9 +1,8 @@
-
 export const swaggerDocument = {
     openapi: '3.0.0',
     info: {
-      title: 'users API',
-      description: 'API to manage userss',
+      title: 'School Sample API',
+      description: 'API to manage School ',
       version: '1.0.0',
     },
     services: {
@@ -30,7 +29,7 @@ export const swaggerDocument = {
           },
         },
         post: {
-          summary: 'Create a new users',
+          summary: 'Create a new user',
           requestBody: {
             required: true,
             content: {
@@ -42,7 +41,7 @@ export const swaggerDocument = {
             },
           },
           responses: {
-            '200': {
+            '201': {
               description: 'users created successfully',
               content: {
                 'application/json': {
@@ -145,21 +144,21 @@ export const swaggerDocument = {
           type: 'object',
           properties: {
             _id: { type: 'string' },
-            name: { type: 'string' },
-            director: { type: 'string' },
-            year: { type: 'number' },
+            username: { type: 'string' },
+            password: {type: "string"},
+            age: { type: "number" },
+            createAt: { type: "date"}
           },
         },
         usersInput: {
           type: 'object',
           properties: {
-            name: { type: 'string' },
-            director: { type: 'string' },
-            year: { type: 'number' },
+            username: { type: 'string' },
+            password: {type: 'string'},
+            age: { type: 'number' },
           },
-          required: ['name', 'director', 'year'],
+          required: ['username', 'password', 'age'],
         },
       },
     },
   };
-  

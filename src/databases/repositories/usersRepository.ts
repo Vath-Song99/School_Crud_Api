@@ -1,4 +1,4 @@
-import { UserType } from "../../schema/userValidation.schema";
+import { UserType } from "../../schemas/userValidation.schema";
 import { BaseCustomError } from "../../errors/baseCustomError";
 import { StatusCode } from "../../utils/consts";
 import APIError from "../../errors/apiError";
