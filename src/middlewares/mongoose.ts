@@ -11,7 +11,7 @@ const validateMongooseId = async (
   const { id } = req.params;
 
   if (!mongoose.isValidObjectId(id)) {
-    const customError = new BaseCustomError('Id is invalide', StatusCode.NotFound);
+    const customError = new BaseCustomError('Id is invalid', StatusCode.NotFound);
     _next(customError);
   }
   _next();
