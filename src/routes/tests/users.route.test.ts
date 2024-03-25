@@ -3,32 +3,39 @@ import app from "../../app";
 import { handleConnectToMongoServer } from "../../utils/mongoMemoryServer ";
 import { UserType } from "../../schemas/userValidation.schema";
 
+
 // Connect to mongo-memory-server
 handleConnectToMongoServer();
 
+
 describe("User API endpoints", () => {
   let userId: string;
-
+  const usersControllers = jest.fn() as jest.Mock<UserType>;
   beforeAll(async () => {
     // Add any setup logic here
   });
+  describe("GET /api/users should return list of users", () =>{
 
-  test("GET /api/users should return list of users", async () => {
-    const response = await request(app).get("/api/users").expect(200);
+    it("GET /api/users should return list of users", async () => {
+      const response = await request(app).get("/api/users").expect(200);
 
-    expect(response.body.data).toBeDefined();
-  });
+      console.log(response.body.data)
+      
+      expect(response.body.data).toBeDefined();
+    });
+  })
 
-  test("POST /api/users should create a new user", async () => {
 
-    const MOCK_USER:UserType = { username: 'Hello test', password: "Songvatgg", age: 8}
+  it("POST /api/users should create a new user", async () => {
+
+    const MOCK_USER:UserType = { username: 'Hello it', password: "Songvatgg", age: 8}
 
     const response = await request(app)
       .post("/api/users")
       .send(MOCK_USER)
       .expect(201)
       .expect("Content-Type", "application/json; charset=utf-8");
-
+    
     userId = response.body.data._id;
     expect(response.body.data).toBeDefined();
     expect(response.body.message).toEqual("POST success");
@@ -36,21 +43,27 @@ describe("User API endpoints", () => {
     expect(response.body.data.age).toEqual(MOCK_USER.age);
   });
 
-  test("PATCH /api/users/:id should update an existing user", async () => {
-    const response = await request(app)
-      .patch(`/api/users/${userId}`)
-      .send({ username: "gay is test", age: 8 })
-      .expect(201);
+  describe("UPDATE /api/users/:id should update a user", () =>{
+     it("should update and return a user", async () =>{
+      const MOCK_USER = { username: "Hello guys what is your name", age: 5}
+        
+      const response = await request(app).patch(`/api/users/${userId}`).send(MOCK_USER).expect(201);
 
-    expect(response.body.data).toBeDefined();
-    // Add more assertions if needed
-  });
 
-  test("DELETE /api/users/:id should delete a user", async () => {
+      console.log(response.body)
+      expect(response).toBeDefined()
+      expect(response.body.username).toEqual("Hello guys what is your name");
+      expect(response.body.data.age).toEqual(5)
+
+     },20000)
+  } )
+
+
+  it("DELETE /api/users/:id should delete a user", async () => {
     const response = await request(app).delete(`/api/users/${userId}`).expect(200);
 
     expect(response.body.message).toEqual('DELETE successfully!');
-  });
+  },20000);
 
   afterAll(async () => {
     // Add any teardown logic here
