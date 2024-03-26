@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 interface User extends Document {
     username: string;
     password: string;
-    age: number;
+    email: string;
     createdAt: Date;
 }
 
@@ -14,16 +14,16 @@ interface User extends Document {
         maxlength: 25,
         required: true
     },
-    password: {
+    email: {
         type: String,
-        min: 8,
-        max: 25,
+        min: 1,
+        max: 45,
         required: true
     },
-    age: {
-        type: Number,
-        min: 5,
-        max: 23,
+    password: {
+        type: String,
+        min: 1,
+        max: 25,
         required: true
     },
     createdAt: {

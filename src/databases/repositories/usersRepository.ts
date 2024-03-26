@@ -2,6 +2,7 @@ import { UserType } from "../../schemas/userValidation.schema";
 import { BaseCustomError } from "../../errors/baseCustomError";
 import { StatusCode } from "../../utils/consts";
 import APIError from "../../errors/apiError";
+import { DuplicateError } from "../../errors/duplicateError";
 const userModel = require("../models/users.model");
 
 class UsersRepository {
@@ -40,14 +41,18 @@ class UsersRepository {
   async createUser(user: UserType | null) {
 
     try{
+
+      // const existinguser = await userModel.findOne( user?.email)
+
+      // if(existinguser){
+      //   throw new DuplicateError("Email already in use!")
+      // }
+
       const userCreated = await userModel(user);
 
-      if (!userCreated) {
-        throw new BaseCustomError("user not created!",StatusCode.NotFound);
-      }
       return userCreated.save();
     }catch(error: unknown){
-      if(error instanceof BaseCustomError){
+      if(error instanceof DuplicateError){
         throw error
       }
       throw new APIError("Unable to create user in database", StatusCode.InternalServerError)

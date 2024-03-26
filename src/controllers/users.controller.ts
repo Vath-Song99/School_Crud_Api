@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { BaseCustomError } from "../errors/baseCustomError";
 import { UserType } from "../schemas/userValidation.schema";
 import { StatusCode } from "../utils/consts";
 import { UsersServices } from "../services/usersServices";
@@ -33,7 +32,7 @@ export const usersControllers = {
     try {
       const { id } = req.params;
 
-      const userData: UserType | null = await userServices.getUserById(id);
+      const userData = await userServices.getUserById(id);
 
       res.status(StatusCode.OK).json({
         message: "found success",
@@ -55,14 +54,15 @@ export const usersControllers = {
       const userData: UserType = {
         username: req.body.username,
         password: req.body.password,
-        age: req.body.age,
+        email: req.body.email,
       };
 
-      const user: UserType | null = await userServices.createUser(userData);
+      const user = await userServices.createUser(userData);
 
       res.status(StatusCode.Created).json({
         message: "POST success",
-        data: user,
+        data: user.user,
+        token: user.token,
       });
     } catch (error: unknown) {
       _next(error);
@@ -81,7 +81,7 @@ export const usersControllers = {
       const data: UserType = {
         username: req.body.username,
         password: req.body.password,
-        age: req.body.age,
+        email: req.body.email,
       };
 
       const updated = await userServices.updateUser(id, data);

@@ -1,6 +1,6 @@
 import { UsersRepository } from "../databases/repositories/usersRepository";
 import { UserType } from "../schemas/userValidation.schema";
-import { generatePassword } from "../utils/generatePassword";
+import { generatePassword, generateSignature } from "../utils/JWT";
 
 class UsersServices {
   repository: UsersRepository;
@@ -27,15 +27,20 @@ class UsersServices {
 
   async createUser(user: UserType | null) {
     try {
-      const { password, username, age } = user as UserType;
+      const { password, username, email } = user as UserType;
 
       const hashPassword = await generatePassword(password);
 
-      return await this.repository.createUser({
+      const newUser =  await this.repository.createUser({
         username,
-        password: hashPassword,
-        age,
+        email,
+        password: hashPassword
       });
+
+      const token = await generateSignature( { email, _id: newUser._id});
+
+      return { user: newUser, token }
+
     } catch (error: unknown) {
       throw error;
     }
