@@ -5,10 +5,10 @@
   "main": "server.ts",
   "scripts": {
     "test": " jest --watchAll",
-    "build": "npm run generate-swagger && npx tsc",
+    "build": "tsoa spec-and-routes && tsc",
     "start": "node dist/server.js",
     "dev": "nodemon  src/server.ts",
-    "generate-swagger": "tsoa spec"
+    "swagger": "tsoa spec --resolveJsonModule"
   },
   "nodemonConfig": {
     "watch": [
@@ -33,6 +33,7 @@
     "mongodb-memory-server": "^9.1.7",
     "mongoose": "^8.2.1",
     "morgan": "^1.10.0",
+    "redoc-express": "^2.1.0",
     "swagger-ui-express": "^5.0.0",
     "tsoa": "^6.1.4",
     "zod": "^3.22.4"

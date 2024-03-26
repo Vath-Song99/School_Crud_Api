@@ -1,21 +1,32 @@
-import { usersControllers } from "../controllers/users.controller";
+import { UserControllers, usersControllers } from "../controllers/users.controller";
 import { validateMongooseId } from "../middlewares/mongoose";
 import {validateUser} from '../middlewares/userValidate'
 import { userValidation } from "../schemas/userValidation.schema";
-import express from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import { ZodSchema } from "zod";
+import { StatusCode } from "../utils/consts";
 
 
 const Schema: ZodSchema = userValidation;
 const Route = express.Router()
 
   // get all users
-  Route.get('/', usersControllers.getUsers);
+  Route.get('/users', usersControllers.getUsers);
   //get one user
   Route.get(`/:id`, validateMongooseId, usersControllers.getUserById);
 
   //create user
-  Route.post('/', validateUser(Schema), usersControllers.createUsers);
+  Route.post('/auth/signup', validateUser(Schema), async (req: Request, res: Response, _next: NextFunction) =>{
+      try{
+        const controller = new UserControllers()
+        const requestBody = req.body;
+        const response = await controller.Signup(requestBody)
+        
+        res.status(StatusCode.Created).send(response)
+      }catch(error: unknown){
+        _next(error)
+      }
+  });
 
   //update user
   Route.patch(`/:id`, validateMongooseId, usersControllers.updateUser);

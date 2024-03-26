@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { generatePassword } from '../';
+import { generatePassword } from '../JWT';
 import APIError from '../../errors/apiError';
 import { handleConnectToMongoServer } from '../mongoMemoryServer ';
 

@@ -28,7 +28,7 @@ describe("User API endpoints", () => {
 
   it("POST /api/users should create a new user", async () => {
 
-    const MOCK_USER:UserType = { username: 'Hello it', password: "Songvatgg", email: "vathgaming@gmail.com"}
+    const MOCK_USER:UserType = { username: 'Hello it',  email: "vathgaming@gmail.com", password: "0973238144Vath",}
 
     const response = await request(app)
       .post("/api/users")
@@ -38,14 +38,14 @@ describe("User API endpoints", () => {
     
     userId = response.body.data._id;
     expect(response.body.data).toBeDefined();
-    expect(response.body.messemail).toEqual("POST success");
+    expect(response.body.message).toEqual("POST success");
     expect(response.body.data.username).toEqual(MOCK_USER.username);
     expect(response.body.data.email).toEqual(MOCK_USER.email);
   });
 
   describe("UPDATE /api/users/:id should update a user", () =>{
      it("should update and return a user", async () =>{
-      const MOCK_USER = { username: "Hello guys what is your name", email: 5}
+      const MOCK_USER = { username: "Hello IT", email: "vathgaming287@gmail.com"}
         
       const response = await request(app).patch(`/api/users/${userId}`).send(MOCK_USER).expect(201);
 
@@ -62,7 +62,7 @@ describe("User API endpoints", () => {
   it("DELETE /api/users/:id should delete a user", async () => {
     const response = await request(app).delete(`/api/users/${userId}`).expect(200);
 
-    expect(response.body.messemail).toEqual('DELETE successfully!');
+    expect(response.body.message).toEqual('DELETE successfully!');
   },20000);
 
   afterAll(async () => {

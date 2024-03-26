@@ -27,7 +27,7 @@ class UsersServices {
 
   async createUser(user: UserType | null) {
     try {
-      const { password, username, email } = user as UserType;
+      const {username, email , password } = user as UserType;
 
       const hashPassword = await generatePassword(password);
 
@@ -37,7 +37,7 @@ class UsersServices {
         password: hashPassword
       });
 
-      const token = await generateSignature( { email, _id: newUser._id});
+      const token = await generateSignature( { email, _id: newUser._id });
 
       return { user: newUser, token }
 

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { UserType } from "../schemas/userValidation.schema";
 import { StatusCode } from "../utils/consts";
 import { UsersServices } from "../services/usersServices";
+import { Body, Post, Route } from "tsoa";
 
 export const usersControllers = {
   getUsers: async (
@@ -62,7 +63,7 @@ export const usersControllers = {
       res.status(StatusCode.Created).json({
         message: "POST success",
         data: user.user,
-        token: user.token,
+        token: user.token
       });
     } catch (error: unknown) {
       _next(error);
@@ -129,3 +130,28 @@ export const usersControllers = {
     }
   },
 };
+
+interface SignUpRequestBody {
+  username: string;
+  email: string;
+  password: string;
+  // Add any other properties if present in the Zod schema
+}
+
+@Route("/api/v1")
+export class UserControllers {
+  @Post("/auth/signup")
+  
+  public async Signup (@Body() requestBody : SignUpRequestBody):Promise <object> {
+      try{
+        const {username, email , password} = requestBody;
+
+        const UsersService = new UsersServices();
+        const newUser = await UsersService.createUser({ username, email , password})
+        return newUser.user
+      }catch(error: unknown){
+        throw error
+      }
+  }
+
+}

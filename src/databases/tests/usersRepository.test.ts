@@ -21,7 +21,8 @@ describe("Unit test for userRep", () => {
     it("should return all users data", async () => {
       const MOCK_USER = {
         username: "test",
-        age: 6,
+        email: "smoeurysongvat@gmail.com",
+        password: "whatisthisis"
       };
       (userModel.find as jest.Mock).mockReturnValue(MOCK_USER);
 
@@ -33,9 +34,10 @@ describe("Unit test for userRep", () => {
 
     it("should be get users", async () => {
       const MOCK_USER = {
-        _id: "gehglewyg",
-        username: "test-duma",
-        age: 9,
+        _id: "hahathisisid",
+        username: "test-dumagg",
+        email: "vathgaming287@gmail.com",
+        password: "hahawhatisthat432"
       };
       (userModel.findById as jest.Mock).mockReturnValue(MOCK_USER);
 

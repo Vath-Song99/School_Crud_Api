@@ -3,7 +3,6 @@ import { BaseCustomError } from "../../errors/baseCustomError";
 import { StatusCode } from "../../utils/consts";
 import APIError from "../../errors/apiError";
 import { DuplicateError } from "../../errors/duplicateError";
-import { User } from "../../types/users";
 const userModel = require("../models/users.model");
 
 class UsersRepository {
