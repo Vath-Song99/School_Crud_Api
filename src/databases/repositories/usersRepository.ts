@@ -3,6 +3,7 @@ import { BaseCustomError } from "../../errors/baseCustomError";
 import { StatusCode } from "../../utils/consts";
 import APIError from "../../errors/apiError";
 import { DuplicateError } from "../../errors/duplicateError";
+import { User } from "../../types/users";
 const userModel = require("../models/users.model");
 
 class UsersRepository {
@@ -17,7 +18,7 @@ class UsersRepository {
     } catch (error: unknown) {
       if (error instanceof BaseCustomError) {
         throw error;
-      } 
+      }
       throw new APIError("Unable to find user in database");
     }
   }
@@ -39,23 +40,34 @@ class UsersRepository {
   }
 
   async createUser(user: UserType | null) {
+    try {
+      const { email } = user as UserType;
+      const existingUser = await this.getUserByEmail({ email });
 
-    try{
-
-      // const existinguser = await userModel.findOne( user?.email)
-
-      // if(existinguser){
-      //   throw new DuplicateError("Email already in use!")
-      // }
+      if (existingUser) {
+        throw new DuplicateError("Email already in use!");
+      }
 
       const userCreated = await userModel(user);
 
       return userCreated.save();
-    }catch(error: unknown){
-      if(error instanceof DuplicateError){
-        throw error
+    } catch (error: unknown) {
+      if (error instanceof DuplicateError) {
+        throw error;
       }
-      throw new APIError("Unable to create user in database", StatusCode.InternalServerError)
+      throw new APIError(
+        "Unable to create user in database",
+        StatusCode.InternalServerError
+      );
+    }
+  }
+
+  async getUserByEmail({ email }: { email: string }) {
+    try {
+      const existingUser = await userModel.findOne({ email: email });
+      return existingUser;
+    } catch (error: unknown) {
+      throw null;
     }
   }
 
@@ -81,36 +93,48 @@ class UsersRepository {
     }
   }
   async deleteOneUser(id: string) {
-    try{
+    try {
       const deleted = await userModel.deleteOne({ _id: id });
 
       if (deleted.deletedCount === 0) {
-        throw new BaseCustomError("user could be not deleted!", StatusCode.NotFound);
+        throw new BaseCustomError(
+          "user could be not deleted!",
+          StatusCode.NotFound
+        );
       }
       return deleted;
-    }catch(error: unknown){
-      if(error instanceof BaseCustomError){
+    } catch (error: unknown) {
+      if (error instanceof BaseCustomError) {
         throw error;
       }
-      throw new APIError("Unable to delete user in database", StatusCode.InternalServerError)
+      throw new APIError(
+        "Unable to delete user in database",
+        StatusCode.InternalServerError
+      );
     }
   }
 
   async deleteAllUsers() {
-     try{
+    try {
       const deleted = await userModel.deleteMany({});
 
       if (deleted.deletedCount === 0) {
-        throw new BaseCustomError("users could be not deleted!", StatusCode.NotFound);
+        throw new BaseCustomError(
+          "users could be not deleted!",
+          StatusCode.NotFound
+        );
       }
-  
+
       return deleted;
-     }catch(error: unknown){
-      if(error instanceof BaseCustomError){
-        throw error
+    } catch (error: unknown) {
+      if (error instanceof BaseCustomError) {
+        throw error;
       }
-      throw new APIError("Unable to delete user in database", StatusCode.InternalServerError)
-     }
+      throw new APIError(
+        "Unable to delete user in database",
+        StatusCode.InternalServerError
+      );
+    }
   }
 }
 
