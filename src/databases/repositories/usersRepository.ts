@@ -3,6 +3,7 @@ import { UserType } from "../../schemas/@types/user";
 import { StatusCode } from "../../utils/consts";
 import APIError from "../../errors/apiError";
 import { DuplicateError } from "../../errors/duplicateError";
+import { Options } from "../../routes/@types/userRoute";
 const userModel = require("../models/users.model");
 
 class UsersRepository {
@@ -22,9 +23,9 @@ class UsersRepository {
     }
   }
 
-  async getUsers(): Promise<any> {
+  async getUsers(options: Options): Promise<any> {
     try {
-      const usersData = await userModel.find();
+      const usersData = await userModel.paginate({},options);
 
       if (!usersData) {
         throw new BaseCustomError("No data found!", StatusCode.NotFound);

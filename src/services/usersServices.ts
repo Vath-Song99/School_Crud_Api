@@ -1,6 +1,7 @@
 import { UsersRepository } from "../databases/repositories/usersRepository";
 import { generatePassword, generateSignature } from "../utils/JWT";
 import { UserType } from "../schemas/@types/user";
+import { Options } from "../routes/@types/userRoute";
 
 class UsersServices {
   repository: UsersRepository;
@@ -17,9 +18,9 @@ class UsersServices {
     }
   }
 
-  async getUsers() {
+  async getUsers(options: Options) {
     try {
-      return await this.repository.getUsers();
+      return await this.repository.getUsers(options);
     } catch (error: unknown) {
       throw error;
     }

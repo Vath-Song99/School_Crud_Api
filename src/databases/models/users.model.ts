@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2"
 
 interface User extends Document {
     username: string;
@@ -31,5 +32,7 @@ interface User extends Document {
         default: Date.now
     }
 });
+usersSchema.plugin(mongoosePaginate)
+
 
 module.exports = mongoose.model<User>("users", usersSchema)

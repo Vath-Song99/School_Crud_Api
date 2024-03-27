@@ -127,8 +127,9 @@
 // };
 
 import { UsersServices } from "../services/usersServices";
-import { Body, Get, Post, Route, Path, Put, Delete, Patch } from "tsoa";
+import { Body, Get, Post, Route, Path, Put, Delete, Patch, Query, Queries } from "tsoa";
 import { UserControllerType } from "./@types/userController";
+import { Options } from "../routes/@types/userRoute";
 
 @Route("/api/v1")
 export class UserControllers {
@@ -166,10 +167,10 @@ export class UserControllers {
   }
 
   @Get("/user")
-  public async GetUsers(): Promise<any> {
+  public async GetUsers(@Queries() options: Options): Promise<any> {
     try {
       const userService = new UsersServices();
-      const users = await userService.getUsers();
+      const users = await userService.getUsers(options);
 
       return users;
     } catch (error: unknown) {

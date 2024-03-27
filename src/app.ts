@@ -11,7 +11,6 @@ import redoc from "redoc-express"
 import loggerMiddleware from "./middlewares/loggerMinddleware";
 import { BaseCustomError } from "./errors/baseCustomError";
 const swaggerDocument = require("../public/swagger.json")
-
 dotenv.config();
 const app: Application = express();
 

@@ -6,6 +6,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import { ZodSchema } from "zod";
 import { StatusCode } from "../../utils/consts";
 import { PATH_AUTH, PATH_GET } from "./userPath";
+import { Options } from "../@types/userRoute";
 
 const Schema: ZodSchema = userValidation;
 const Route = express.Router()
@@ -14,9 +15,14 @@ const Route = express.Router()
   // get all users
   Route.get(`${PATH_GET}`, async (req: Request, res: Response, _next: NextFunction) =>{
      try{
+        const { page = 1 , limit = 5} = req.query;
 
+        const options:Options = {
+          page: parseInt(page as string, 10),
+          limit: parseInt(limit as string, 10),
+      };
         const controller = new UserControllers();
-        const response = await controller.GetUsers();
+        const response = await controller.GetUsers(options);
 
         res.status(StatusCode.OK).json({
           message: "GET success",
