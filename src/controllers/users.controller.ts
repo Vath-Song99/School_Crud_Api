@@ -129,7 +129,6 @@
 import { UsersServices } from "../services/usersServices";
 import { Body, Get, Post, Route, Path, Put, Delete, Patch } from "tsoa";
 import { UserControllerType } from "./@types/userController";
-import { PATH_AUTH, PATH_GET } from "../routes/v1/userPath";
 
 @Route("/api/v1")
 export class UserControllers {

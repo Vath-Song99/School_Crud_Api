@@ -8,6 +8,8 @@ import  requestTimeMiddleware from "./middlewares/requestTime";
 import  errorHandler from "./middlewares/errorHandler";
 import { StatusCode } from "./utils/consts";
 import redoc from "redoc-express"
+import loggerMiddleware from "./middlewares/loggerMinddleware";
+import { BaseCustomError } from "./errors/baseCustomError";
 const swaggerDocument = require("../public/swagger.json")
 
 dotenv.config();
@@ -49,6 +51,8 @@ app.get(
   })
 );
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(loggerMiddleware);
+
 
 // Routes
 const PATH = "/api/v1";
@@ -60,9 +64,16 @@ app.get('/', async (req: Request, res:Response) =>{
 app.use(PATH, Route )
 
 // Catch-all route for handling unknown routes
-app.all('*', (req: Request, res: Response, _next:NextFunction) => {
- 
-  _next(new Error(`page could be not found!`))
+app.all('*', async(req: Request, res: Response, _next:NextFunction) => {
+   try{
+    const error = new BaseCustomError("Page could be not found!", StatusCode.NotFound);
+    if(error){
+      throw error
+    }
+    
+   }catch(error: unknown){
+    _next(error)
+   }
 });
 
 // Error handling middleware
