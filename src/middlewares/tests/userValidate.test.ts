@@ -41,8 +41,8 @@ describe("validateInput middleware", () => {
     const req = {
       body: {
         username: "sokritha",
-        password: "SmeourySongvat",
-        age: 8
+        email: "vatgaming@gmail.com",
+        password: "SmeourySongvat"
       },
     }; // Provide invalid data for your testSchema
 

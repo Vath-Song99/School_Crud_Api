@@ -16,7 +16,6 @@ const validateUser =  (Schema: ZodSchema) =>{
         _next ()
     }catch(error: unknown |any){
     const userError = new BaseCustomError('username or password is incorrect', StatusCode.Unauthorized) 
-        console.log(error)
         _next(userError)
     }
      }

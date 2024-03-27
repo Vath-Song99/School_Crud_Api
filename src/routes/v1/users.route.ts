@@ -51,7 +51,10 @@ const Route = express.Router()
         const requestBody = req.body;
         const response = await controller.Signup(requestBody)
         
-        res.status(StatusCode.Created).send(response)
+        res.status(StatusCode.Created).json({
+          message: "POST success",
+          user: response
+        })
       }catch(error: unknown){
         _next(error)
       }
@@ -67,7 +70,7 @@ const Route = express.Router()
       const response = await controller.UpdateUser(userId, requestBody)
 
       res.status(StatusCode.OK).json({
-        message: "PUT success",
+        message: "PATCH success",
         user: response
       })
     }catch(error: unknown){

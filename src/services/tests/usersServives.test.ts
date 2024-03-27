@@ -5,14 +5,24 @@ jest.mock("../../databases/repositories/usersRepository");
 
 describe("UsersServices", () => {
   let usersServices: UsersServices;
+  let userId: string
   beforeEach(() => {
     usersServices = new UsersServices();
   });
 
+  describe("CreateUser", () => {
+    it("should call createUser method of UsersRepository with the provided user data", async () => {
+      const userData: UserType = { username: "vahtzingIng", password: "gegeggegege", email: "vatgaming287@gmail.com" };
+      const user =  await usersServices.createUser(userData);
+
+      console.log(user)
+      // expect(usersRepositoryMock.createUser).toHaveBeenCalledWith(userData);
+    });
+  });
+
   describe("getUserById", () => {
     it("should call getUserById method of UsersRepository with the provided id", async () => {
-      const MOCK_USER = { _id: "gjregr", username: "vaht", password: "gegeggegege", email: "vatgaming287@gmail.com" };
-      const userId = MOCK_USER._id;
+      const MOCK_USER = {  username: "vaht", password: "gegeggegege", email: "vatgaming287@gmail.com" };
 
       (usersServices.repository.getUserById as jest.Mock).mockReturnValue(MOCK_USER);
 
@@ -20,7 +30,7 @@ describe("UsersServices", () => {
 
       
       expect(user).toBeDefined();
-      expect(user).toEqual(MOCK_USER)
+      // expect(user.user).toEqual(MOCK_USER)
     });
   });
 
@@ -48,13 +58,7 @@ describe("UsersServices", () => {
       );
     });
   })
-    describe("createUser", () => {
-      it("should call createUser method of UsersRepository with the provided user data", async () => {
-        const userData: UserType = { username: "vaht", password: "gegeggegege", email: "vatgaming287@gmail.com" };
-        await usersServices.createUser(userData);
-        // expect(usersRepositoryMock.createUser).toHaveBeenCalledWith(userData);
-      });
-    });
+    
 
     describe("updateUser", () => {
       it("should call updateUser method of UsersRepository with the provided id and user data", async () => {

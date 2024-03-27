@@ -31,7 +31,7 @@
 		"securitySchemes": {}
 	},
 	"info": {
-		"title": "School Mangement",
+		"title": "crudtsc",
 		"version": "1.0.0",
 		"license": {
 			"name": "ISC"
@@ -170,6 +170,24 @@
 						"content": {
 							"application/json": {
 								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			},
+			"delete": {
+				"operationId": "DeleteAllUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"additionalProperties": false,
+									"type": "object"
+								}
 							}
 						}
 					}

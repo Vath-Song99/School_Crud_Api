@@ -208,4 +208,16 @@ export class UserControllers {
       throw error;
     }
   }
+  @Delete("/user")
+  public async DeleteAllUsers (): Promise <object> {
+    try{ 
+      const userService = new UsersServices();
+      const deletedUsers = await userService.deleteAllUsers();
+
+      return deletedUsers
+
+    }catch(error: unknown){
+      throw error
+    }
+  }
 }

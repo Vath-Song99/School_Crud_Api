@@ -9,7 +9,7 @@ export const logger = winston.createLogger({
     winston.format.timestamp(),
     winston.format.json()
   ),
-  transports: [],
+  transports: [new winston.transports.Console()],
 });
 
 export const logInit = ({

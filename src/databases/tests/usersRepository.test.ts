@@ -1,6 +1,7 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { UsersRepository } from "../repositories/usersRepository";
 import { handleConnectToMongoServer } from "../../utils/mongoMemoryServer ";
+import { UserType } from "../../schemas/@types/user";
 const userModel = require("../models/users.model");
 
 jest.mock("../models/users.model");
@@ -19,11 +20,7 @@ describe("Unit test for userRep", () => {
 
   describe("Test Repository", () => {
     it("should return all users data", async () => {
-      const MOCK_USER = {
-        username: "test",
-        email: "smoeurysongvat@gmail.com",
-        password: "whatisthisis"
-      };
+      const MOCK_USER: UserType[] = [{username: "songvat", email: "vatgaming2287@gmail.com", password: "0973238144VATH"}];
       (userModel.find as jest.Mock).mockReturnValue(MOCK_USER);
 
       const usersData = await userRepository.getUsers();

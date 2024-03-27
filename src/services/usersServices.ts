@@ -36,8 +36,8 @@ class UsersServices {
         email,
         password: hashPassword
       });
-
-      const token = await generateSignature( { email, _id: newUser._id });
+      const { _id } = newUser || ''
+      const token = await generateSignature( { email, _id: _id });
 
       return { user: newUser, token }
 
