@@ -1,5 +1,5 @@
-import { UserType } from "../../schemas/userValidation.schema";
 import { BaseCustomError } from "../../errors/baseCustomError";
+import { UserType } from "../../schemas/@types/user";
 import { StatusCode } from "../../utils/consts";
 import APIError from "../../errors/apiError";
 import { DuplicateError } from "../../errors/duplicateError";

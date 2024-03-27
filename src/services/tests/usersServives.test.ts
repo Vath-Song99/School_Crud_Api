@@ -1,6 +1,5 @@
 import { UsersServices } from "../usersServices";
-import { UserType } from "../../schemas/userValidation.schema";
-
+import { UserType } from "../../schemas/@types/user";
 // Mock UsersRepository
 jest.mock("../../databases/repositories/usersRepository");
 

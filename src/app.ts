@@ -1,6 +1,6 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
-import { Route } from "./routes/users.route";
+import { Route } from "./routes/v1/users.route";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import morgan from "morgan";
@@ -54,7 +54,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 const PATH = "/api/v1";
 app.get('/', async (req: Request, res:Response) =>{
   res.status(StatusCode.OK).json({
-    message: "what is taht"
+    message: "this is my api /api/v1"
   })
 })
 app.use(PATH, Route )

@@ -6,7 +6,4 @@ const userValidation = z.object({
     password: z.string().min(8).max(25)
 });
 
-export type UserType = z.infer<typeof userValidation>
-
-
 export {userValidation}

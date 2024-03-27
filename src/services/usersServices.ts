@@ -1,6 +1,6 @@
 import { UsersRepository } from "../databases/repositories/usersRepository";
-import { UserType } from "../schemas/userValidation.schema";
 import { generatePassword, generateSignature } from "../utils/JWT";
+import { UserType } from "../schemas/@types/user";
 
 class UsersServices {
   repository: UsersRepository;
