@@ -26,7 +26,8 @@ const Route = express.Router()
 
         res.status(StatusCode.OK).json({
           message: "GET success",
-          users: response
+          users: response.user,
+          paginate: response.paginate
         })
      }catch(error: unknown){
       _next(error)
