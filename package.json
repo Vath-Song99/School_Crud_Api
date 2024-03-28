@@ -34,7 +34,6 @@
     "mongodb": "^6.4.0",
     "mongodb-memory-server": "^9.1.7",
     "mongoose": "^8.2.1",
-    "mongoose-paginate-v2": "^1.8.0",
     "morgan": "^1.10.0",
     "redoc-express": "^2.1.0",
     "swagger-ui-express": "^5.0.0",

@@ -4,6 +4,7 @@ import { StatusCode } from "../../utils/consts";
 import APIError from "../../errors/apiError";
 import { DuplicateError } from "../../errors/duplicateError";
 import { Options } from "../../routes/@types/userRoute";
+import { PaginateType } from "../@types/repository";
 const userModel = require("../models/users.model");
 
 class UsersRepository {
@@ -25,12 +26,27 @@ class UsersRepository {
 
   async getUsers(options: Options): Promise<any> {
     try {
-      const usersData = await userModel.paginate({},options);
+
+      const {page, limit} = options
+
+      const skip: number = (page - 1) * limit;
+
+      const usersData = await userModel.find().skip(skip).limit(limit).exec();
+
+      const totalDocuments: number = await userModel.countDocuments();
+      const totalPages: number = Math.ceil(totalDocuments / limit);
 
       if (!usersData) {
         throw new BaseCustomError("No data found!", StatusCode.NotFound);
       }
-      return usersData;
+
+      const pagination:PaginateType = {
+        currentPage: page,
+        totalPages: totalPages,
+        totalDocuments: totalDocuments,
+    };
+
+      return {user: usersData, paginate: pagination};
     } catch (error: unknown) {
       if (error instanceof BaseCustomError) {
         throw error;
