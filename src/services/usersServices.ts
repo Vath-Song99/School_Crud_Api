@@ -1,23 +1,26 @@
 import { UsersRepository } from "../databases/repositories/usersRepository";
-import { generatePassword, generateSignature } from "../utils/JWT";
+import {
+  comparePassword,
+  generatePassword,
+  generateSignature,
+} from "../utils/JWT";
 import { UserType } from "../schemas/@types/user";
-import { Options } from "../routes/@types/userRoute";
+import { LoginType, Options } from "../routes/@types/userRoute";
 import { generateEmailVerificationToken } from "../utils/acountVerifycation";
 import AccountVerificationModel from "../databases/models/acountVerifycation";
 import APIError from "../errors/apiError";
 import EmailSender from "../utils/emailSender";
 import { AccountVerificationRepository } from "../databases/repositories/acountVerifycation";
 import { StatusCode } from "../utils/consts";
-
+import { BaseCustomError } from "../errors/baseCustomError";
 
 class UsersServices {
   private repository: UsersRepository;
   private accountVerificationRepo: AccountVerificationRepository;
- 
+
   constructor() {
     this.repository = new UsersRepository();
     this.accountVerificationRepo = new AccountVerificationRepository();
-
   }
 
   async getUserById(id: string) {
@@ -38,19 +41,19 @@ class UsersServices {
 
   async createUser(user: UserType | null) {
     try {
-      const {username, email , password } = user as UserType;
+      const { username, email, password } = user as UserType;
 
       const hashPassword = await generatePassword(password);
 
-      const newUser =  await this.repository.createUser({
+      const newUser = await this.repository.createUser({
         username,
         email,
-        password: hashPassword
+        password: hashPassword,
       });
-      const { _id } = newUser || ''
-      const token = await generateSignature( { email, _id: _id });
+      const { _id } = newUser || "";
+      const token = await generateSignature({ email, _id: _id });
 
-      return { user: newUser, token }
+      return { user: newUser, token };
     } catch (error: unknown) {
       throw error;
     }
@@ -75,14 +78,14 @@ class UsersServices {
       const newAccountVerification = await accountVerification.save();
 
       // Step 3
-      const existedUser = await this.repository.getUserById( userId );
+      const existedUser = await this.repository.getUserById(userId);
       if (!existedUser) {
         throw new APIError("User does not exist!");
       }
 
       // Step 4
       const emailSender = EmailSender.getInstance();
-        emailSender.sendSignUpVerificationEmail({
+      emailSender.sendSignUpVerificationEmail({
         toEmail: existedUser.email,
         emailVerificationToken: newAccountVerification.emailVerificationToken,
       });
@@ -103,13 +106,15 @@ class UsersServices {
     }
 
     // Find the user associated with this token
-    const user = await this.repository.getUserById(isTokenExist.userId.toString());
+    const user = await this.repository.getUserById(
+      isTokenExist.userId.toString()
+    );
     if (!user) {
       throw new APIError("User does not exist.", StatusCode.NotFound);
     }
 
     // Mark the user's email as verified
-    user.isVerfied = true;
+    user.isVerified = true;
     await user.save();
 
     // Remove the verification token
@@ -137,6 +142,32 @@ class UsersServices {
   async deleteAllUsers() {
     try {
       return await this.repository.deleteAllUsers();
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  async Login({ identifier, password }: LoginType) {
+    // TODO
+
+    try {
+      // Example authentication logic, replace with your own
+      const user = await this.repository.getUserByUsernameAndPassword(
+        identifier
+      );
+      // Compare hashed passwords
+      const passwordMatch = await comparePassword({
+        password,
+        userPassword: user.password,
+      });
+      if (!passwordMatch) {
+        throw new BaseCustomError("Invalid credentials", 401);
+      }
+
+      const token = await generateSignature({ username: user.username });
+      // const token = jwt.sign({ username: user.username }, 'secret', { expiresIn: '1h' });
+
+      return { user , token };
     } catch (error: unknown) {
       throw error;
     }

@@ -3,7 +3,7 @@ import { UserType } from "../../schemas/@types/user";
 import { StatusCode } from "../../utils/consts";
 import APIError from "../../errors/apiError";
 import { DuplicateError } from "../../errors/duplicateError";
-import { Options } from "../../routes/@types/userRoute";
+import { LoginType, Options } from "../../routes/@types/userRoute";
 import { PaginateType } from "../@types/repository";
 const userModel = require("../models/users.model");
 
@@ -151,6 +151,15 @@ class UsersRepository {
       );
     }
   }
+
+  async getUserByUsernameAndPassword (identifier: string){
+    try{
+      const user = await userModel.findOne({$or: [ {username: identifier} , {email: identifier} ]});
+      return user
+    }catch(error: unknown){
+
+    }
+  } 
 }
 
 export { UsersRepository };

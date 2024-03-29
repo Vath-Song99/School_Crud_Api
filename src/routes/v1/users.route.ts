@@ -5,7 +5,7 @@ import { userValidation } from "../../schemas/userValidation.schema";
 import express, { NextFunction, Request, Response } from 'express'
 import { ZodSchema } from "zod";
 import { StatusCode } from "../../utils/consts";
-import { PATH_AUTH, PATH_GET } from "./userPath";
+import { PATH_AUTH, PATH_GET, PATH_LOGIN } from "./userPath";
 import { Options } from "../@types/userRoute";
 
 const Schema: ZodSchema = userValidation;
@@ -67,6 +67,22 @@ const Route = express.Router()
       }
   });
 
+  Route.post(PATH_LOGIN, async(req: Request, res: Response,_next: NextFunction) =>{
+    try{
+      const requestBody = req.body
+      const controller = new UserControllers();
+      const response = await controller.Login(requestBody);
+
+      res.status(StatusCode.OK).json({
+        message: "LOGIN success",
+        user: response.user,
+        token: response.token
+      })
+
+    }catch(error: unknown){
+      _next(error)
+    }
+  })
 
   Route.get(`${PATH_AUTH}/verify`,async (req: Request, res: Response, _next: NextFunction) =>{
       try{

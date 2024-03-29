@@ -5,7 +5,7 @@ interface User extends Document {
     password: string;
     email: string;
     createdAt: Date;
-    isVerify: boolean
+    isVerified: boolean
 }
 
  const usersSchema: Schema<User> = new Schema<User>({
@@ -31,7 +31,7 @@ interface User extends Document {
         type: Date,
         default: Date.now
     },
-    isVerify: {
+    isVerified: {
         type: Boolean,
         default: false
     }

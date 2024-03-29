@@ -1,4 +1,4 @@
-//odl version of the CRUD controller
+
 // export const usersControllers = {
 //   getUsers: async (
 //     req: Request,
@@ -129,7 +129,7 @@
 import { UsersServices } from "../services/usersServices";
 import { Body, Get, Post, Route, Path, Put, Delete, Patch, Query, Queries, SuccessResponse } from "tsoa";
 import { UserControllerType } from "./@types/userController";
-import { Options } from "../routes/@types/userRoute";
+import { LoginType, Options } from "../routes/@types/userRoute";
 import { StatusCode } from "../utils/consts";
 import { generateSignature } from "../utils/JWT";
 
@@ -173,6 +173,19 @@ export class UserControllers {
       return { token: jwtToken };
     } catch (error) {
       throw error;
+    }
+  }
+
+  @Post("/auth/login")
+  public async Login(@Body() requestBody: LoginType): Promise<any> {
+    try{
+      const {identifier, password } = requestBody;
+      const userService = new UsersServices();
+      const userLogin = await userService.Login({identifier, password});
+      
+      return userLogin
+    }catch(error: unknown){
+      throw error
     }
   }
 
