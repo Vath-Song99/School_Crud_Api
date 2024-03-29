@@ -127,9 +127,11 @@
 // };
 
 import { UsersServices } from "../services/usersServices";
-import { Body, Get, Post, Route, Path, Put, Delete, Patch, Query, Queries } from "tsoa";
+import { Body, Get, Post, Route, Path, Put, Delete, Patch, Query, Queries, SuccessResponse } from "tsoa";
 import { UserControllerType } from "./@types/userController";
 import { Options } from "../routes/@types/userRoute";
+import { StatusCode } from "../utils/consts";
+import { generateSignature } from "../utils/JWT";
 
 @Route("/api/v1")
 export class UserControllers {
@@ -146,11 +148,34 @@ export class UserControllers {
         email,
         password,
       });
+      await usersService.SendVerifyEmailToken({ userId: newUser.user._id });
       return newUser.user;
     } catch (error: unknown) {
       throw error;
     }
   }
+
+
+  @SuccessResponse(StatusCode.OK, "OK")
+  @Get("/auth/signup/verify")
+  public async VerifyEmail(@Query() token: string): Promise<{ token: string }> {
+    try {
+      const userService = new UsersServices()
+
+      // Verify the email token
+      const user = await userService.VerifyEmailToken({ token });
+
+      // Generate JWT for the verified user
+      const jwtToken = await generateSignature({
+        userId: user._id,
+      });
+
+      return { token: jwtToken };
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   @Get(`user/:userId`)
   public async GetUserById(

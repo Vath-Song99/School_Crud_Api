@@ -26,27 +26,26 @@ class UsersRepository {
 
   async getUsers(options: Options): Promise<any> {
     try {
-
-      const {page, limit} = options
+      const { page, limit } = options;
 
       const skip: number = (page - 1) * limit;
 
       const usersData = await userModel.find().skip(skip).limit(limit).exec();
 
-      const totalDocuments: number = await userModel.countDocuments();
-      const totalPages: number = Math.ceil(totalDocuments / limit);
-
       if (!usersData) {
         throw new BaseCustomError("No data found!", StatusCode.NotFound);
       }
 
-      const pagination:PaginateType = {
+      const totalDocuments: number = await userModel.countDocuments();
+      const totalPages: number = Math.ceil(totalDocuments / limit);
+
+      const pagination: PaginateType = {
         currentPage: page,
         totalPages: totalPages,
         totalDocuments: totalDocuments,
-    };
+      };
 
-      return {user: usersData, paginate: pagination};
+      return { user: usersData, paginate: pagination };
     } catch (error: unknown) {
       if (error instanceof BaseCustomError) {
         throw error;
