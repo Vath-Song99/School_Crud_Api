@@ -5,6 +5,7 @@ interface User extends Document {
     password: string;
     email: string;
     createdAt: Date;
+    isVerify: boolean
 }
 
  const usersSchema: Schema<User> = new Schema<User>({
@@ -29,6 +30,10 @@ interface User extends Document {
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    isVerify: {
+        type: Boolean,
+        default: false
     }
 });
 module.exports = mongoose.model<User>("users", usersSchema)

@@ -6,13 +6,18 @@ import { generateEmailVerificationToken } from "../utils/acountVerifycation";
 import AccountVerificationModel from "../databases/models/acountVerifycation";
 import APIError from "../errors/apiError";
 import EmailSender from "../utils/emailSender";
+import { AccountVerificationRepository } from "../databases/repositories/acountVerifycation";
+import { StatusCode } from "../utils/consts";
 
 
 class UsersServices {
-  repository: UsersRepository;
-
+  private repository: UsersRepository;
+  private accountVerificationRepo: AccountVerificationRepository;
+ 
   constructor() {
     this.repository = new UsersRepository();
+    this.accountVerificationRepo = new AccountVerificationRepository();
+
   }
 
   async getUserById(id: string) {
@@ -46,7 +51,6 @@ class UsersServices {
       const token = await generateSignature( { email, _id: _id });
 
       return { user: newUser, token }
-
     } catch (error: unknown) {
       throw error;
     }
@@ -99,9 +103,7 @@ class UsersServices {
     }
 
     // Find the user associated with this token
-    const user = await this.repository.FindUserById({
-      id: isTokenExist.userId.toString(),
-    });
+    const user = await this.repository.getUserById(isTokenExist.userId.toString());
     if (!user) {
       throw new APIError("User does not exist.", StatusCode.NotFound);
     }

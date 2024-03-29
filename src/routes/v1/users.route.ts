@@ -67,6 +67,24 @@ const Route = express.Router()
       }
   });
 
+
+  Route.get(`${PATH_AUTH}/verify`,async (req: Request, res: Response, _next: NextFunction) =>{
+      try{
+      const token = req.query.token as string
+      const controller = new UserControllers();
+      const response = await controller.VerifyEmail(token);
+
+      res.status(StatusCode.OK).json({
+        message: "Verify Success",
+        token: response.token
+      })
+
+      }catch(error: unknown){
+        _next(error)
+      }
+  })
+
+
   //update user
   Route.patch(`${PATH_GET}/:userId`, validateMongooseId, async (req: Request, res: Response, _next: NextFunction)=>{
     try{

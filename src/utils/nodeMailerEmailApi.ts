@@ -29,7 +29,7 @@ export default class NodemailerEmailApi implements EmailApi {
       emailVerificationToken,
     });
 
-    const subject = "welcome to micro-sample! Please verify your email address";
+    const subject = "welcome to School mangement! Please verify your email address";
     const textBody = this.buildSignUpVerificationEmailTextBody({
       emailVerificationLink,
     });
@@ -59,7 +59,7 @@ export default class NodemailerEmailApi implements EmailApi {
   ): string => {
     const { emailVerificationLink } = args;
 
-    return `Welcome to Micro-sample, the coolest micro sample platform! Please click on the link below (or copy it to your browser) to verify your email address. ${emailVerificationLink}`;
+    return `Welcome to School Managerment, the coolest micro sample platform! Please click on the link below (or copy it to your browser) to verify your email address. ${emailVerificationLink}`;
   };
 
   private buildSignUpVerificationEmailHtmlBody = (
@@ -68,9 +68,9 @@ export default class NodemailerEmailApi implements EmailApi {
     const { emailVerificationLink } = args;
 
     return `
-        <h1>Welcome to Micro-sample</h1>
+        <h1>Welcome to School mangement</h1>
         <br/>
-        Welcome to Micro-sample, the coolest micro sample platform!
+        Welcome to School mangement, the coolest micro sample platform!
         <br/>
         <br/>
         Please click on the link below (or copy it to your browser) to verify your email address:
@@ -82,7 +82,7 @@ export default class NodemailerEmailApi implements EmailApi {
   private async sendEmail(args: EmailApiSendEmailArgs): Promise<void> {
     const { toEmail, subject, htmlBody, textBody } = args;
     await this.transporter.sendMail({
-      from: "Micro-sample <noreply@microsample.app>",
+      from: "School mangement <noreply@microsample.app>",
       to: toEmail,
       subject,
       text: textBody,

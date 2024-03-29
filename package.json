@@ -8,7 +8,10 @@
     "build": "tsoa spec-and-routes && tsc",
     "start:dev": "concurrently \"npm run dev\" \"npm run swagger\"",
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
-    "swagger": "nodemon -e ts -x \"tsoa spec\""
+    "gen:routes": "tsoa routes",
+    "gen:spec": "tsoa spec",
+    "gen:all": "npm run gen:spec && npm run gen:routes",
+    "swagger": "nodemon -e ts -x \"tsoa spec\" \"gen:routes\""
   },
   "nodemonConfig": {
     "watch": [

@@ -10,6 +10,7 @@ import { StatusCode } from "./utils/consts";
 import redoc from "redoc-express"
 import loggerMiddleware from "./middlewares/loggerMinddleware";
 import { BaseCustomError } from "./errors/baseCustomError";
+import { RegisterRoutes } from "./routes/v1/routes"
 const swaggerDocument = require("../public/swagger.json")
 dotenv.config();
 const app: Application = express();
@@ -60,7 +61,8 @@ app.get('/', async (req: Request, res:Response) =>{
     message: "this is my api /api/v1"
   })
 })
-app.use(PATH, Route )
+// app.use(PATH, Route )
+RegisterRoutes(app)
 
 // Catch-all route for handling unknown routes
 app.all('*', async(req: Request, res: Response, _next:NextFunction) => {
