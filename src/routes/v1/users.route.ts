@@ -1,14 +1,14 @@
 import { UserControllers } from "../../controllers/users.controller";
 import { validateMongooseId } from "../../middlewares/mongoose";
 import {validateUser} from '../../middlewares/userValidate'
-import { userValidation } from "../../schemas/userValidation.schema";
+import { userLoginValidate, userSignupValidation } from "../../schemas/userValidation.schema";
 import express, { NextFunction, Request, Response } from 'express'
 import { ZodSchema } from "zod";
 import { StatusCode } from "../../utils/consts";
 import { PATH_AUTH, PATH_GET, PATH_LOGIN } from "./userPath";
 import { Options } from "../@types/userRoute";
 
-const Schema: ZodSchema = userValidation;
+const Schema: ZodSchema = userSignupValidation;
 const Route = express.Router()
 
 
@@ -67,7 +67,7 @@ const Route = express.Router()
       }
   });
 
-  Route.post(PATH_LOGIN, async(req: Request, res: Response,_next: NextFunction) =>{
+  Route.post(PATH_LOGIN, validateUser(userLoginValidate), async(req: Request, res: Response,_next: NextFunction) =>{
     try{
       const requestBody = req.body
       const controller = new UserControllers();

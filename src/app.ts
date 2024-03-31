@@ -61,8 +61,8 @@ app.get('/', async (req: Request, res:Response) =>{
     message: "this is my api /api/v1"
   })
 })
-// app.use(PATH, Route )
-RegisterRoutes(app)
+app.use(PATH, Route )
+// RegisterRoutes(app)
 
 // Catch-all route for handling unknown routes
 app.all('*', async(req: Request, res: Response, _next:NextFunction) => {
