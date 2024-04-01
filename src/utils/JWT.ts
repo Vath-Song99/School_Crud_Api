@@ -1,7 +1,6 @@
 import APIError from "../errors/apiError";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { LoginType } from "../routes/@types/userRoute";
 
 const salt = 10;
 
