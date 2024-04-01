@@ -15,12 +15,13 @@ const Route = express.Router()
   // get all users
   Route.get(`${PATH_GET}`, async (req: Request, res: Response, _next: NextFunction) =>{
      try{
-        const { page = 1 , limit = 5} = req.query;
-
+        const { page = 1 , limit = 5 , name} = req.query;
+       
         const options:Options = {
           page: parseInt(page as string, 10),
           limit: parseInt(limit as string, 10),
-      };
+          name: name as string
+      }; 
         const controller = new UserControllers();
         const response = await controller.GetUsers(options);
 

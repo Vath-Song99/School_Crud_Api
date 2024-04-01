@@ -52,11 +52,15 @@
 					"limit": {
 						"type": "number",
 						"format": "double"
+					},
+					"name": {
+						"type": "string"
 					}
 				},
 				"required": [
 					"page",
-					"limit"
+					"limit",
+					"name"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -289,6 +293,14 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

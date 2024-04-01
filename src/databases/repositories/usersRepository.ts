@@ -3,7 +3,7 @@ import { UserType } from "../../schemas/@types/user";
 import { StatusCode } from "../../utils/consts";
 import APIError from "../../errors/apiError";
 import { DuplicateError } from "../../errors/duplicateError";
-import { LoginType, Options } from "../../routes/@types/userRoute";
+import {  Options } from "../../routes/@types/userRoute";
 import { PaginateType } from "../@types/repository";
 const userModel = require("../models/users.model");
 
@@ -26,11 +26,12 @@ class UsersRepository {
 
   async getUsers(options: Options): Promise<any> {
     try {
-      const { page, limit } = options;
-
+      //destructuring onbject
+      const { page, limit, name } = options;
+      
       const skip: number = (page - 1) * limit;
 
-      const usersData = await userModel.find().skip(skip).limit(limit).exec();
+      const usersData = await userModel.find({username: name}).skip(skip).limit(limit).exec();
 
       if (!usersData) {
         throw new BaseCustomError("No data found!", StatusCode.NotFound);

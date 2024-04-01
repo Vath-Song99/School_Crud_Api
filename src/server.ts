@@ -1,5 +1,5 @@
 import connectToDatabase from "./utils/connecToDb";
-import app from './app'
+import app from "./app";
 import path from "path";
 import createConfig from "./utils/config";
 import { logger, logInit } from "./utils/logger";
@@ -7,11 +7,9 @@ import EmailSender from "./utils/emailSender";
 import NodemailerEmailApi from "./utils/nodeMailerEmailApi";
 import MongoDBConnector from "./databases";
 
-
-
 const PORT = process.env.PORT;
 
-const startServer = async () =>{
+const startServer = async () => {
   try {
     const currentEnv = process.env.NODE_ENV || "development";
     const configPath = path.join(
@@ -79,7 +77,6 @@ const startServer = async () =>{
     logger.error("Failed to initialize application", { error });
     process.exit(1);
   }
+};
 
-}
-
-startServer()
+startServer();

@@ -13,6 +13,7 @@ import EmailSender from "../utils/emailSender";
 import { AccountVerificationRepository } from "../databases/repositories/acountVerifycation";
 import { StatusCode } from "../utils/consts";
 import { BaseCustomError } from "../errors/baseCustomError";
+import { Query } from "tsoa";
 
 class UsersServices {
   private repository: UsersRepository;
