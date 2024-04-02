@@ -19,7 +19,7 @@ const startServer = async () => {
         : "../configs/.env.production"
     );
     const config = createConfig(configPath);
-
+      
     // Activate Logger
     logInit({ env: config.env, logLevel: config.logLevel });
 

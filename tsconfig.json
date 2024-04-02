@@ -12,6 +12,6 @@
     "skipLibCheck": true,                               
     "outDir": "./dist",
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/views/pages/auth.js"],
   "exclude": ["node_modules", "dist"]
 }

@@ -156,9 +156,13 @@ class UsersRepository {
   async getUserByUsernameAndPassword (identifier: string){
     try{
       const user = await userModel.findOne({$or: [ {username: identifier} , {email: identifier} ]});
+
+      if(!user){
+        throw new BaseCustomError('could not be found username or password in database!', StatusCode.NotFound)
+      }
       return user
     }catch(error: unknown){
-
+      throw error
     }
   } 
 }

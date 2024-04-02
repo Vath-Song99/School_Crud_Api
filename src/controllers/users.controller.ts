@@ -127,7 +127,7 @@
 // };
 
 import { UsersServices } from "../services/usersServices";
-import { Body, Get, Post, Route, Path, Put, Delete, Patch, Query, Queries, SuccessResponse } from "tsoa";
+import { Body, Get, Post, Route, Path, Put, Delete, Patch, Query, Queries, SuccessResponse, Middlewares } from "tsoa";
 import { UserControllerType } from "./@types/userController";
 import { LoginType, Options } from "../routes/@types/userRoute";
 import { StatusCode } from "../utils/consts";
@@ -265,13 +265,13 @@ export class UserControllers {
 
   @SuccessResponse(StatusCode.OK,"OK")
   @Post(PATH_ROUTE.PATH_GOOGLE)
+  @Middlewares(passport.authenticate("google", { scope: ["email"]}))
   public async GoolgeAuth(){
-    passport.authenticate("google", { scope: ["email"]});
   }
 
   @SuccessResponse(StatusCode.OK,"OK")
   @Post(PATH_ROUTE.PATH_GOOGLE_CALLBACK)
+  @Middlewares(passport.authenticate('google', { failureRedirect: '/error' }))
   public async GoogleAuthCallBack(){
-    passport.authenticate('google', { failureRedirect: '/' })
   }
 }
