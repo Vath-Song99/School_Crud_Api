@@ -132,6 +132,8 @@ import { UserControllerType } from "./@types/userController";
 import { LoginType, Options } from "../routes/@types/userRoute";
 import { StatusCode } from "../utils/consts";
 import { generateSignature } from "../utils/JWT";
+import { PATH_ROUTE } from "../routes/v1/userDefs";
+import passport from "passport";
 
 @Route("/api/v1")
 export class UserControllers {
@@ -258,5 +260,18 @@ export class UserControllers {
     }catch(error: unknown){
       throw error
     }
+  }
+
+
+  @SuccessResponse(StatusCode.OK,"OK")
+  @Post(PATH_ROUTE.PATH_GOOGLE)
+  public async GoolgeAuth(){
+    passport.authenticate("google", { scope: ["email"]});
+  }
+
+  @SuccessResponse(StatusCode.OK,"OK")
+  @Post(PATH_ROUTE.PATH_GOOGLE_CALLBACK)
+  public async GoogleAuthCallBack(){
+    passport.authenticate('google', { failureRedirect: '/' })
   }
 }

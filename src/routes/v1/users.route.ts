@@ -5,7 +5,7 @@ import { userLoginValidate, userSignupValidation } from "../../schemas/userValid
 import express, { NextFunction, Request, Response } from 'express'
 import { ZodSchema } from "zod";
 import { StatusCode } from "../../utils/consts";
-import { PATH_AUTH, PATH_GET, PATH_LOGIN } from "./userPath";
+import { PATH_ROUTE} from "./userDefs";
 import { Options } from "../@types/userRoute";
 
 const Schema: ZodSchema = userSignupValidation;
@@ -13,7 +13,7 @@ const Route = express.Router()
 
 
   // get all users
-  Route.get(`${PATH_GET}`, async (req: Request, res: Response, _next: NextFunction) =>{
+  Route.get(`${PATH_ROUTE.PATH_GET}`, async (req: Request, res: Response, _next: NextFunction) =>{
      try{
         const { page = 1 , limit = 5 , name} = req.query;
        
@@ -36,7 +36,7 @@ const Route = express.Router()
 
   });
   //get one user
-  Route.get(`${PATH_GET}/:userId`, validateMongooseId, async (req: Request, res: Response, _next: NextFunction) =>{
+  Route.get(`${PATH_ROUTE.PATH_GET}/:userId`, validateMongooseId, async (req: Request, res: Response, _next: NextFunction) =>{
     try{
 
       const controller = new UserControllers();
@@ -53,7 +53,7 @@ const Route = express.Router()
   });
 
   //create user
-  Route.post(PATH_AUTH, validateUser(Schema), async (req: Request, res: Response, _next: NextFunction) =>{
+  Route.post(PATH_ROUTE.PATH_AUTH, validateUser(Schema), async (req: Request, res: Response, _next: NextFunction) =>{
       try{
         const controller = new UserControllers()
         const requestBody = req.body;
@@ -68,7 +68,7 @@ const Route = express.Router()
       }
   });
 
-  Route.post(PATH_LOGIN, validateUser(userLoginValidate), async(req: Request, res: Response,_next: NextFunction) =>{
+  Route.post(PATH_ROUTE.PATH_LOGIN, validateUser(userLoginValidate), async(req: Request, res: Response,_next: NextFunction) =>{
     try{
       const requestBody = req.body
       const controller = new UserControllers();
@@ -85,7 +85,7 @@ const Route = express.Router()
     }
   })
 
-  Route.get(`${PATH_AUTH}/verify`,async (req: Request, res: Response, _next: NextFunction) =>{
+  Route.get(`${PATH_ROUTE.PATH_AUTH}/verify`,async (req: Request, res: Response, _next: NextFunction) =>{
       try{
       const token = req.query.token as string
       const controller = new UserControllers();
@@ -103,7 +103,7 @@ const Route = express.Router()
 
 
   //update user
-  Route.patch(`${PATH_GET}/:userId`, validateMongooseId, async (req: Request, res: Response, _next: NextFunction)=>{
+  Route.patch(`${PATH_ROUTE.PATH_GET}/:userId`, validateMongooseId, async (req: Request, res: Response, _next: NextFunction)=>{
     try{
 
       const controller = new UserControllers();
@@ -121,7 +121,7 @@ const Route = express.Router()
   });
 
   //delete user
-  Route.delete(`${PATH_GET}/:userId`, validateMongooseId, async (req: Request, res: Response, _next: NextFunction) =>{
+  Route.delete(`${PATH_ROUTE.PATH_GET}/:userId`, validateMongooseId, async (req: Request, res: Response, _next: NextFunction) =>{
     try{
 
       const { userId } = req.params;

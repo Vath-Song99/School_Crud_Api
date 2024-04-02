@@ -11,10 +11,11 @@ import redoc from "redoc-express"
 import loggerMiddleware from "./middlewares/loggerMinddleware";
 import { BaseCustomError } from "./errors/baseCustomError";
 import { RegisterRoutes } from "./routes/v1/routes"
+import passport, { session } from "passport";
+import { googleAuth } from "./services/passportService";
 const swaggerDocument = require("../public/swagger.json")
-dotenv.config();
 const app: Application = express();
-
+  
 
 // Global Middleware
 app.use(express.json());
@@ -53,16 +54,20 @@ app.get(
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(loggerMiddleware);
 
+// Initialize Passport and restore authentication state from session
+app.use(passport.initialize());
+app.use(passport.session());
+googleAuth()
+
 
 // Routes
-const PATH = "/api/v1";
 app.get('/', async (req: Request, res:Response) =>{
   res.status(StatusCode.OK).json({
     message: "this is my api /api/v1"
   })
 })
-app.use(PATH, Route )
-// RegisterRoutes(app)
+// app.use(PATH, Route )
+RegisterRoutes(app)
 
 // Catch-all route for handling unknown routes
 app.all('*', async(req: Request, res: Response, _next:NextFunction) => {

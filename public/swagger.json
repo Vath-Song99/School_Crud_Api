@@ -323,6 +323,30 @@
 				"security": [],
 				"parameters": []
 			}
+		},
+		"/api/v1/google": {
+			"post": {
+				"operationId": "GoolgeAuth",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/google/callback": {
+			"post": {
+				"operationId": "GoogleAuthCallBack",
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
 		}
 	},
 	"servers": [

@@ -7,8 +7,6 @@ import EmailSender from "./utils/emailSender";
 import NodemailerEmailApi from "./utils/nodeMailerEmailApi";
 import MongoDBConnector from "./databases";
 
-const PORT = process.env.PORT;
-
 const startServer = async () => {
   try {
     const currentEnv = process.env.NODE_ENV || "development";
