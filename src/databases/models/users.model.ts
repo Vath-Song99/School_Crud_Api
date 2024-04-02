@@ -42,4 +42,4 @@ interface User extends Document {
         sparse: true
     }
 });
-module.exports = mongoose.model<User>("users", usersSchema)
+export const userModel = mongoose.model<User>("users", usersSchema)

@@ -14,6 +14,9 @@ import { AccountVerificationRepository } from "../databases/repositories/acountV
 import { StatusCode } from "../utils/consts";
 import { BaseCustomError } from "../errors/baseCustomError";
 import { Query } from "tsoa";
+import axios from "axios";
+import { acccInfor, googleSinginConfig } from "../utils/googleConfig";
+import { userModel } from "../databases/models/users.model";
 
 class UsersServices {
   private repository: UsersRepository;
@@ -168,10 +171,51 @@ class UsersServices {
       const token = await generateSignature({ username: user.username });
       // const token = jwt.sign({ username: user.username }, 'secret', { expiresIn: '1h' });
 
-      return { user , token };
+      return { user, token };
     } catch (error: unknown) {
       throw error;
     }
+  }
+
+  async SigninWithGoogleCallBack(code: string) {
+    // TODO
+    // 1. configure client
+    // 2. accessToken from user
+    // 3. Use the access token to access user info from Google APIs
+    // 4. find you that exist in database
+    //************************ */
+
+   try{
+ // step 1
+ const tokenResponse = await googleSinginConfig(code);
+
+ // step 2
+ const accessToken = tokenResponse.data.access_token;
+ // step 3
+ const userInfoResponse = await acccInfor(accessToken);
+
+ // stept 4
+ const { name, email, id } = userInfoResponse?.data;
+ const user = await this.repository.getUserById(id)
+ // Check if the user exists in the database
+ if(user){
+ // If the user doesn't exist, create a new user record
+   throw new BaseCustomError('your account already exist, please sign in with email password instead', StatusCode.BadRequest)
+ }
+ const newUser =  new userModel({
+   googleId: id,
+   username: name,
+   email: email,
+   eisVerified: true
+ });  
+ await newUser.save();    
+ return {userInfoResponse , accessToken};
+   }catch(error: unknown){
+    if(error instanceof BaseCustomError){
+      throw error
+    }
+    throw new APIError('Unable to Singin with google')
+   }
   }
 }
 

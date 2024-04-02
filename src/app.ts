@@ -10,9 +10,13 @@ import loggerMiddleware from "./middlewares/loggerMinddleware";
 import { BaseCustomError } from "./errors/baseCustomError";
 import path from "path";
 import { RegisterRoutes } from "./routes/v1/routes";
+import axios from "axios";
 const swaggerDocument = require("../public/swagger.json");
 const app: Application = express();
+import dotenv from 'dotenv'
+import { Route } from "./routes/v1/users.route";
 
+dotenv.config( { path: 'configs/.env'})
 // Global Middleware
 app.use(express.json());
 app.use(express.static("public"));
@@ -58,8 +62,16 @@ app.set("views", path.join(__dirname, "views"));
 
 // Initialize Passport and restore authentication state from session
 
-// app.use(PATH, Route )
-RegisterRoutes(app);
+
+
+const PATH = '/api/v1'
+app.use(PATH, Route )
+app.get('/', async (req: Request, res: Response) =>{
+  res.render('pages/auth')
+})
+// RegisterRoutes(app);
+
+
 
 // Catch-all route for handling unknown routes
 app.all("*", async (req: Request, res: Response, _next: NextFunction) => {

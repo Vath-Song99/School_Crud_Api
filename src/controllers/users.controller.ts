@@ -133,7 +133,6 @@ import { LoginType, Options } from "../routes/@types/userRoute";
 import { StatusCode } from "../utils/consts";
 import { generateSignature } from "../utils/JWT";
 import { PATH_ROUTE } from "../routes/v1/userDefs";
-import passport from "passport";
 
 @Route("/api/v1")
 export class UserControllers {
@@ -262,16 +261,29 @@ export class UserControllers {
     }
   }
 
-
   @SuccessResponse(StatusCode.OK,"OK")
-  @Post(PATH_ROUTE.PATH_GOOGLE)
-  @Middlewares(passport.authenticate("google", { scope: ["email"]}))
-  public async GoolgeAuth(){
+  @Get(PATH_ROUTE.PATH_GOOGLE)
+  public async GoogleAuthCallBack(code: string){
+    try{
+      const userService = new UsersServices();
+      const userInfo = userService.SigninWithGoogleCallBack(code)
+
+      return userInfo
+    }catch(error: unknown){
+      throw error
+    }
   }
 
-  @SuccessResponse(StatusCode.OK,"OK")
-  @Post(PATH_ROUTE.PATH_GOOGLE_CALLBACK)
-  @Middlewares(passport.authenticate('google', { failureRedirect: '/error' }))
-  public async GoogleAuthCallBack(){
-  }
+
+  // @SuccessResponse(StatusCode.OK,"OK")
+  // @Post(PATH_ROUTE.PATH_GOOGLE)
+  // @Middlewares(passport.authenticate("google", { scope: ["email"]}))
+  // public async GoolgeAuth(){
+  // }
+
+  // @SuccessResponse(StatusCode.OK,"OK")
+  // @Post(PATH_ROUTE.PATH_GOOGLE_CALLBACK)
+  // @Middlewares(passport.authenticate('google', { failureRedirect: '/error' }))
+  // public async GoogleAuthCallBack(){
+  // }
 }
