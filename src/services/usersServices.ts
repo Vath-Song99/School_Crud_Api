@@ -62,7 +62,7 @@ class UsersServices {
       const existUser = await this.repository.getUserByEmail({ email: email });
       if (existUser && existUser.isVerified === false) {
         throw new DuplicateError(
-          "Email already exists in the system!, please login!"
+          "Email already exists in the system!, please login"
         );
       }
       //step 3
