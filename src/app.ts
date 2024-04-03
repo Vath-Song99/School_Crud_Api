@@ -71,8 +71,6 @@ app.get('/', async (req: Request, res: Response) =>{
 })
 // RegisterRoutes(app);
 
-
-
 // Catch-all route for handling unknown routes
 app.all("*", async (req: Request, res: Response, _next: NextFunction) => {
   try {

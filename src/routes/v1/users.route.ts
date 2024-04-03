@@ -161,20 +161,20 @@ Route.delete(
 );
 //signin with google
 
-Route.get(
-  PATH_ROUTE.PATH_GOOGLE,
-  async (req: Request, res: Response, _next: NextFunction) => {
-    try {
-      const redirectUri = process.env.REDIRECT_URL as string;
-      const clienId = process.env.GOOGLE_CLIENT_ID as string;
+// Route.get(
+//   PATH_ROUTE.PATH_GOOGLE,
+//   async (req: Request, res: Response, _next: NextFunction) => {
+//     try {
+//       const redirectUri = process.env.REDIRECT_URL as string;
+//       const clienId = process.env.GOOGLE_CLIENT_ID as string;
 
-      const authUrl = await authConfigUrl(clienId, redirectUri);
-      res.redirect(authUrl);
-    } catch (error: unknown) {
-      _next(error);
-    }
-  }
-);
+//       const authUrl = await authConfigUrl(clienId, redirectUri);
+//       res.redirect(authUrl);
+//     } catch (error: unknown) {
+//       _next(error);
+//     }
+//   }
+// );
 
 //Signin callback with google
 Route.get(
@@ -183,15 +183,15 @@ Route.get(
     const { code } = req.query;
     if (code || typeof code === "string") {
       try {
-        const queryCode = code as string;
-        const controller = new UserControllers();
-        const userInfoResponse = await controller.GoogleAuthCallBack(queryCode);
+        // const queryCode = code as string;
+        // const controller = new UserControllers();
+        // const userInfoResponse = await controller.GoogleAuthCallBack(queryCode);
 
-        res.status(StatusCode.OK).json({
-          message: "Sigin success",
-          user: userInfoResponse?.userInfoResponse?.data,
-          token: userInfoResponse?.accessToken,
-        });
+        // res.status(StatusCode.OK).json({
+        //   message: "Sigin success",
+        //   user: userInfoResponse?.userInfoResponse?.data,
+        //   token: userInfoResponse?.accessToken,
+        // });
       } catch (error: unknown) {
         _next(error);
       }

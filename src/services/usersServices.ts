@@ -6,17 +6,20 @@ import {
 } from "../utils/JWT";
 import { UserType } from "../schemas/@types/user";
 import { LoginType, Options } from "../routes/@types/userRoute";
-import { generateEmailVerificationToken } from "../utils/acountVerifycation";
+import {
+  generateEmailVerificationToken,
+  generateExpireTime,
+} from "../utils/acountVerifycation";
 import AccountVerificationModel from "../databases/models/acountVerifycation";
 import APIError from "../errors/apiError";
 import EmailSender from "../utils/emailSender";
 import { AccountVerificationRepository } from "../databases/repositories/acountVerifycation";
 import { StatusCode } from "../utils/consts";
 import { BaseCustomError } from "../errors/baseCustomError";
-import { Query } from "tsoa";
-import axios from "axios";
 import { acccInfor, googleSinginConfig } from "../utils/googleConfig";
 import { userModel } from "../databases/models/users.model";
+import { ClientError } from "../errors/clientError";
+import { DuplicateError } from "../errors/duplicateError";
 
 class UsersServices {
   private repository: UsersRepository;
@@ -44,17 +47,32 @@ class UsersServices {
   }
 
   async createUser(user: UserType | null) {
+    //TODO
+    //1. hash password
+    //2. check exist user and user not verify
+    //3. create user to database
+    //4. generateToken
+
     try {
       const { username, email, password } = user as UserType;
-
+      // step 1
       const hashPassword = await generatePassword(password);
 
+      // step 2
+      const existUser = await this.repository.getUserByEmail({ email: email });
+      if (existUser && existUser.isVerified === false) {
+        throw new DuplicateError(
+          "Email already exists in the system!, please login!"
+        );
+      }
+      //step 3
       const newUser = await this.repository.createUser({
         username,
         email,
         password: hashPassword,
       });
-      const { _id } = newUser || "";
+      // step 4
+      const { _id } = newUser;
       const token = await generateSignature({ email, _id: _id });
 
       return { user: newUser, token };
@@ -66,28 +84,32 @@ class UsersServices {
   async SendVerifyEmailToken({ userId }: { userId: string }) {
     // TODO
     // 1. Generate Verify Token
-    // 2. Save the Verify Token in the Database
-    // 3. Get the Info User By Id
-    // 4. Send the Email to the User
+    // 2. Generate expire time
+    // 3. Save the Verify Token in the Database
+    // 4. Get the Info User By Id
+    // 5. Send the Email to the User
 
     try {
       // Step 1
       const emailVerificationToken = generateEmailVerificationToken();
 
-      // Step 2
+      //step 2
+      const expireTime = generateExpireTime();
+      // Step 3
       const accountVerification = new AccountVerificationModel({
         userId,
         emailVerificationToken,
+        expireAt: expireTime,
       });
       const newAccountVerification = await accountVerification.save();
 
-      // Step 3
+      // Step 4
       const existedUser = await this.repository.getUserById(userId);
       if (!existedUser) {
         throw new APIError("User does not exist!");
       }
 
-      // Step 4
+      // Step 5
       const emailSender = EmailSender.getInstance();
       emailSender.sendSignUpVerificationEmail({
         toEmail: existedUser.email,
@@ -108,7 +130,9 @@ class UsersServices {
         StatusCode.BadRequest
       );
     }
-
+    if (new Date() > isTokenExist.expireAt) {
+      throw new ClientError("token url is expired", StatusCode.BadRequest);
+    }
     // Find the user associated with this token
     const user = await this.repository.getUserById(
       isTokenExist.userId.toString()
@@ -185,37 +209,40 @@ class UsersServices {
     // 4. find you that exist in database
     //************************ */
 
-   try{
- // step 1
- const tokenResponse = await googleSinginConfig(code);
+    try {
+      // step 1
+      const tokenResponse = await googleSinginConfig(code);
 
- // step 2
- const accessToken = tokenResponse.data.access_token;
- // step 3
- const userInfoResponse = await acccInfor(accessToken);
+      // step 2
+      const accessToken = tokenResponse.data.access_token;
+      // step 3
+      const userInfoResponse = await acccInfor(accessToken);
 
- // stept 4
- const { name, email, id } = userInfoResponse?.data;
- const user = await this.repository.getUserById(id)
- // Check if the user exists in the database
- if(user){
- // If the user doesn't exist, create a new user record
-   throw new BaseCustomError('your account already exist, please sign in with email password instead', StatusCode.BadRequest)
- }
- const newUser =  new userModel({
-   googleId: id,
-   username: name,
-   email: email,
-   eisVerified: true
- });  
- await newUser.save();    
- return {userInfoResponse , accessToken};
-   }catch(error: unknown){
-    if(error instanceof BaseCustomError){
-      throw error
+      // stept 4
+      const { name, email, id } = userInfoResponse?.data;
+      const user = await this.repository.getUserByEmail({ email: email });
+      // Check if the user exists in the database
+      if (user) {
+        // If the user doesn't exist, create a new user record
+        throw new BaseCustomError(
+          "your account already exist, please sign in with email password instead",
+          StatusCode.BadRequest
+        );
+      }
+      const newUser = new userModel({
+        googleId: id,
+        username: name,
+        email: email,
+        eisVerified: true,
+      });
+      await newUser.save();
+      return { userInfoResponse, accessToken };
+    } catch (error: unknown) {
+      if (error instanceof BaseCustomError) {
+        throw error;
+      }
+      throw new APIError("Unable to Singin with google");
     }
-    throw new APIError('Unable to Singin with google')
-   }
   }
 }
 

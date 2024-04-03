@@ -1,131 +1,3 @@
-
-// export const usersControllers = {
-//   getUsers: async (
-//     req: Request,
-//     res: Response,
-//     _next: NextFunction
-//   ): Promise<void> => {
-//     const userServices = new UsersServices();
-//     try {
-//       const usersData: UserType | null = await userServices.getUsers();
-
-//       res
-//         .status(StatusCode.OK)
-//         .json({ message: "GET success", data: usersData });
-//     } catch (error: unknown) {
-//       _next(error);
-//     }
-//   },
-
-//   getUserById: async (
-//     req: Request,
-//     res: Response,
-//     _next: NextFunction
-//   ): Promise<void | Response> => {
-//     const userServices = new UsersServices();
-//     // const user =  await userModel.find({});
-
-//     try {
-//       const { id } = req.params;
-
-//       const userData = await userServices.getUserById(id);
-
-//       res.status(StatusCode.OK).json({
-//         message: "found success",
-//         data: userData,
-//       });
-//     } catch (error: unknown) {
-//       _next(error);
-//     }
-//   },
-
-//   // createUsers: async (
-//   //   req: Request,
-//   //   res: Response,
-//   //   _next: NextFunction
-//   // ): Promise<void> => {
-//   //   const userServices = new UsersServices();
-
-//   //   try {
-//   //     const userData: UserType = {
-//   //       username: req.body.username,
-//   //       password: req.body.password,
-//   //       email: req.body.email,
-//   //     };
-
-//   //     const user = await userServices.createUser(userData);
-
-//   //     res.status(StatusCode.Created).json({
-//   //       message: "POST success",
-//   //       data: user.user,
-//   //       token: user.token
-//   //     });
-//   //   } catch (error: unknown) {
-//   //     _next(error);
-//   //   }
-//   // },
-
-//   updateUser: async (
-//     req: Request,
-//     res: Response,
-//     _next: NextFunction
-//   ): Promise<void> => {
-//     const userServices = new UsersServices();
-//     try {
-//       const { id } = req.params;
-
-//       const data: UserType = {
-//         username: req.body.username,
-//         password: req.body.password,
-//         email: req.body.email,
-//       };
-
-//       const updated = await userServices.updateUser(id, data);
-
-//       res.status(StatusCode.Created).json({
-//         message: "PATCH success",
-//         data: updated,
-//       });
-//     } catch (error: unknown) {
-//       _next(error);
-//     }
-//   },
-
-//   deleteUser: async (
-//     req: Request,
-//     res: Response,
-//     _next: NextFunction
-//   ): Promise<void> => {
-//     const userServices = new UsersServices();
-
-//     try {
-//       const { id } = req.params;
-
-//       await userServices.deleteOneUser(id);
-
-//       res.status(StatusCode.OK).json({
-//         message: "DELETE successfully!",
-//         error: false,
-//       });
-//     } catch (error: unknown) {
-//       _next(error);
-//     }
-//   },
-//   deleteAllusers: async (req: Request, res: Response, _next: NextFunction) => {
-//     const userServices = new UsersServices();
-//     try {
-//       await userServices.deleteAllUsers();
-
-//       res.status(StatusCode.OK).json({
-//         message: "DELETE successfully!",
-//         error: false,
-//       });
-//     } catch (error: unknown) {
-//       _next(error);
-//     }
-//   },
-// };
-
 import { UsersServices } from "../services/usersServices";
 import { Body, Get, Post, Route, Path, Put, Delete, Patch, Query, Queries, SuccessResponse, Middlewares } from "tsoa";
 import { UserControllerType } from "./@types/userController";
@@ -261,29 +133,17 @@ export class UserControllers {
     }
   }
 
-  @SuccessResponse(StatusCode.OK,"OK")
-  @Get(PATH_ROUTE.PATH_GOOGLE)
-  public async GoogleAuthCallBack(code: string){
-    try{
-      const userService = new UsersServices();
-      const userInfo = userService.SigninWithGoogleCallBack(code)
-
-      return userInfo
-    }catch(error: unknown){
-      throw error
-    }
-  }
-
-
   // @SuccessResponse(StatusCode.OK,"OK")
-  // @Post(PATH_ROUTE.PATH_GOOGLE)
-  // @Middlewares(passport.authenticate("google", { scope: ["email"]}))
-  // public async GoolgeAuth(){
+  // @Get(PATH_ROUTE.PATH_GOOGLE)
+  // public async GoogleAuthCallBack(code: string){
+  //   try{
+  //     const userService = new UsersServices();
+  //     const userInfo = userService.SigninWithGoogleCallBack(code)
+
+  //     return userInfo
+  //   }catch(error: unknown){
+  //     throw error
+  //   }
   // }
 
-  // @SuccessResponse(StatusCode.OK,"OK")
-  // @Post(PATH_ROUTE.PATH_GOOGLE_CALLBACK)
-  // @Middlewares(passport.authenticate('google', { failureRedirect: '/error' }))
-  // public async GoogleAuthCallBack(){
-  // }
 }

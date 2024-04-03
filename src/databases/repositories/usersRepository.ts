@@ -5,7 +5,7 @@ import APIError from "../../errors/apiError";
 import { DuplicateError } from "../../errors/duplicateError";
 import {  Options } from "../../routes/@types/userRoute";
 import { PaginateType } from "../@types/repository";
-const userModel = require("../models/users.model");
+import { userModel } from "../models/users.model";
 
 class UsersRepository {
   async getUserById(id: string): Promise<any> {
@@ -57,20 +57,10 @@ class UsersRepository {
 
   async createUser(user: UserType | null) {
     try {
-      const { email } = user as UserType;
-      const existingUser = await this.getUserByEmail({ email });
-
-      if (existingUser) {
-        throw new DuplicateError("Email already in use!");
-      }
-
-      const userCreated = await userModel(user);
+      const userCreated = await userModel.create(user);
 
       return userCreated.save();
     } catch (error: unknown) {
-      if (error instanceof DuplicateError) {
-        throw error;
-      }
       throw new APIError(
         "Unable to create user in database",
         StatusCode.InternalServerError
