@@ -5,9 +5,9 @@ export const googleSinginConfig = async (code: string) => {
     "https://oauth2.googleapis.com/token",
     {
       code,
-      client_id: process.env.GOOGLE_CLIENT_ID as string || "760529098159-v2ldqed2dju8up2ribsj1m2o4shjbrcq.apps.googleusercontent.com",
-      client_secret: process.env.GOOGLE_CLIENT_SECRET as string || "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",
-      redirect_uri: process.env.REDIRECT_URL as string || "http://localhost:3001/auth/google/callback",
+      client_id: process.env.GOOGLE_CLIENT_ID as string ,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET as string ,
+      redirect_uri: process.env.REDIRECT_URL as string ,
       // grant_type: process.env.GOOGLE_CLIENT_ID as string
     }
   );
