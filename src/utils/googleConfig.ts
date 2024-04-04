@@ -7,11 +7,11 @@ export const googleSinginConfig = async (code: string) => {
       code,
       client_id: process.env.GOOGLE_CLIENT_ID as string ,
       client_secret: process.env.GOOGLE_CLIENT_SECRET as string ,
-      redirect_uri: process.env.REDIRECT_URL as string ,
-      // grant_type: process.env.GOOGLE_CLIENT_ID as string
+      redirect_uri: process.env.REDIRECT_URL as string,
+      grant_type: 'authorization_code'
     }
   );
-  return await tokenResponse;
+  return await tokenResponse.data;
 };
 export const acccInfor = async (access_token: string) => {
   try {

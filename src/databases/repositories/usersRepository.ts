@@ -6,6 +6,7 @@ import { DuplicateError } from "../../errors/duplicateError";
 import {  Options } from "../../routes/@types/userRoute";
 import { PaginateType } from "../@types/repository";
 import { userModel } from "../models/users.model";
+import { GoogleUserType } from "./@types/userRepo";
 
 class UsersRepository {
   async getUserById(id: string): Promise<any> {
@@ -55,7 +56,7 @@ class UsersRepository {
     }
   }
 
-  async createUser(user: UserType | null) {
+  async createUser(user: UserType) {
     try {
       const userCreated = await userModel.create(user);
 
@@ -68,6 +69,24 @@ class UsersRepository {
     }
   }
 
+  async createGoogleUser(user: GoogleUserType){
+      try{
+
+        const {name, email, id , verified_email} = user;
+
+        const newUser = await userModel.create({
+          username: name,
+          email: email,
+          googleId: id,
+          isVerified: verified_email
+        })
+
+        return await newUser.save()
+      }catch(error: unknown){
+        throw error
+      }
+  }
+
   async getUserByEmail({ email }: { email: string }) {
     try {
       const existingUser = await userModel.findOne({ email: email });
@@ -77,7 +96,7 @@ class UsersRepository {
     }
   }
 
-  async updateUser(id: string, user: UserType | null) {
+  async updateUser(id: string, user: UserType) {
     try {
       const updated = await userModel.findByIdAndUpdate({ _id: id }, user);
 
@@ -143,7 +162,7 @@ class UsersRepository {
     }
   }
 
-  async getUserByUsernameAndPassword (identifier: string){
+  async getUserByUsernameAndEmail (identifier: string){
     try{
       const user = await userModel.findOne({$or: [ {username: identifier} , {email: identifier} ]});
 
@@ -152,7 +171,10 @@ class UsersRepository {
       }
       return user
     }catch(error: unknown){
-      throw error
+       if(error instanceof BaseCustomError){
+        throw error
+       }
+       throw new APIError('Internal server error!')
     }
   } 
 }

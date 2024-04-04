@@ -10,7 +10,6 @@ import { ZodSchema } from "zod";
 import { StatusCode } from "../../utils/consts";
 import { PATH_ROUTE } from "./userDefs";
 import { Options } from "../@types/userRoute";
-import { BaseCustomError } from "../../errors/baseCustomError";
 import { authConfigUrl } from "../../utils/googleConfig";
 
 const Schema: ZodSchema = userSignupValidation;
@@ -69,11 +68,10 @@ Route.post(
     try {
       const controller = new UserControllers();
       const requestBody = req.body;
-      const response = await controller.Signup(requestBody);
+      await controller.Signup(requestBody);
 
       res.status(StatusCode.Created).json({
         message: "POST success",
-        user: response,
       });
     } catch (error: unknown) {
       _next(error);
@@ -88,12 +86,10 @@ Route.post(
     try {
       const requestBody = req.body;
       const controller = new UserControllers();
-      const response = await controller.Login(requestBody);
+      await controller.Login(requestBody);
 
       res.status(StatusCode.OK).json({
         message: "LOGIN success",
-        user: response.user,
-        token: response.token,
       });
     } catch (error: unknown) {
       _next(error);
@@ -107,11 +103,10 @@ Route.get(
     try {
       const token = req.query.token as string;
       const controller = new UserControllers();
-      const response = await controller.VerifyEmail(token);
+      await controller.VerifyEmail(token);
 
       res.status(StatusCode.OK).json({
         message: "Verify Success",
-        token: response.token,
       });
     } catch (error: unknown) {
       _next(error);
@@ -159,48 +154,7 @@ Route.delete(
     }
   }
 );
-//signin with google
 
-// Route.get(
-//   PATH_ROUTE.PATH_GOOGLE,
-//   async (req: Request, res: Response, _next: NextFunction) => {
-//     try {
-//       const redirectUri = process.env.REDIRECT_URL as string;
-//       const clienId = process.env.GOOGLE_CLIENT_ID as string;
-
-//       const authUrl = await authConfigUrl(clienId, redirectUri);
-//       res.redirect(authUrl);
-//     } catch (error: unknown) {
-//       _next(error);
-//     }
-//   }
-// );
-
-//Signin callback with google
-Route.get(
-  PATH_ROUTE.PATH_GOOGLE_CALLBACK,
-  async (req: Request, res: Response, _next: NextFunction) => {
-    const { code } = req.query;
-    if (code || typeof code === "string") {
-      try {
-        // const queryCode = code as string;
-        // const controller = new UserControllers();
-        // const userInfoResponse = await controller.GoogleAuthCallBack(queryCode);
-
-        // res.status(StatusCode.OK).json({
-        //   message: "Sigin success",
-        //   user: userInfoResponse?.userInfoResponse?.data,
-        //   token: userInfoResponse?.accessToken,
-        // });
-      } catch (error: unknown) {
-        _next(error);
-      }
-    }
-    
-      console.log("Missing authorization code", StatusCode.BadRequest)
-    
-  }
-);
 
 //delete all users
 // Route.delete(PATH_GET, usersControllers.deleteAllusers )

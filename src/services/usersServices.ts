@@ -17,7 +17,6 @@ import { AccountVerificationRepository } from "../databases/repositories/acountV
 import { StatusCode } from "../utils/consts";
 import { BaseCustomError } from "../errors/baseCustomError";
 import { acccInfor, googleSinginConfig } from "../utils/googleConfig";
-import { userModel } from "../databases/models/users.model";
 import { ClientError } from "../errors/clientError";
 import { DuplicateError } from "../errors/duplicateError";
 
@@ -60,9 +59,16 @@ class UsersServices {
 
       // step 2
       const existUser = await this.repository.getUserByEmail({ email: email });
-      if (existUser && existUser.isVerified === false) {
-        throw new DuplicateError(
-          "Email already exists in the system!, please login"
+      if (existUser) {
+        if (existUser.isVerified === true) {
+          throw new DuplicateError(
+            "Email already exists in the system!, please login"
+          );
+        }
+        await this.SendVerifyEmailToken({ userId: existUser._id });
+        throw new ClientError(
+          "Email is resent, please check email to verify!",
+          StatusCode.BadRequest
         );
       }
       //step 3
@@ -75,6 +81,7 @@ class UsersServices {
       const { _id } = newUser;
       const token = await generateSignature({ email, _id: _id });
 
+      await this.SendVerifyEmailToken({ userId: newUser._id });
       return { user: newUser, token };
     } catch (error: unknown) {
       throw error;
@@ -151,7 +158,7 @@ class UsersServices {
     return user;
   }
 
-  async updateUser(id: string, user: UserType | null) {
+  async updateUser(id: string, user: UserType) {
     try {
       return await this.repository.updateUser(id, user);
     } catch (error: unknown) {
@@ -177,21 +184,24 @@ class UsersServices {
 
   async Login({ identifier, password }: LoginType) {
     // TODO
-
+    // 1. find username or password in datanbase
+    // 2. campare password between user input password and password exist in database
+    // 3. generate token
     try {
-      // Example authentication logic, replace with your own
-      const user = await this.repository.getUserByUsernameAndPassword(
-        identifier
-      );
-      // Compare hashed passwords
+      // step 1
+      const user = await this.repository.getUserByUsernameAndEmail(identifier);
+      // step 2
       const passwordMatch = await comparePassword({
         password,
         userPassword: user.password,
       });
       if (!passwordMatch) {
-        throw new BaseCustomError("Invalid credentials", 401);
+        throw new ClientError(
+          "Invalid email or password!",
+          StatusCode.BadRequest
+        );
       }
-
+      // step 3
       const token = await generateSignature({ username: user.username });
       // const token = jwt.sign({ username: user.username }, 'secret', { expiresIn: '1h' });
 
@@ -207,6 +217,7 @@ class UsersServices {
     // 2. accessToken from user
     // 3. Use the access token to access user info from Google APIs
     // 4. find you that exist in database
+    // 5. create new user to database
     //************************ */
 
     try {
@@ -214,29 +225,29 @@ class UsersServices {
       const tokenResponse = await googleSinginConfig(code);
 
       // step 2
-      const accessToken = tokenResponse.data.access_token;
+      const accessToken = tokenResponse.access_token;
       // step 3
       const userInfoResponse = await acccInfor(accessToken);
 
       // stept 4
-      const { name, email, id } = userInfoResponse?.data;
+      const { name, email, id, verified_email } = userInfoResponse?.data;
       const user = await this.repository.getUserByEmail({ email: email });
       // Check if the user exists in the database
       if (user) {
         // If the user doesn't exist, create a new user record
         throw new BaseCustomError(
-          "your account already exist, please sign in with email password instead",
+          "your account already exist, please login with email password instead",
           StatusCode.BadRequest
         );
       }
-      const newUser = new userModel({
-        googleId: id,
-        username: name,
-        email: email,
-        eisVerified: true,
+      // steps 5
+      const newUser = await this.repository.createGoogleUser({
+        name,
+        email,
+        id,
+        verified_email,
       });
-      await newUser.save();
-      return { userInfoResponse, accessToken };
+      return { newUser, accessToken };
     } catch (error: unknown) {
       if (error instanceof BaseCustomError) {
         throw error;

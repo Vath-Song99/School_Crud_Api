@@ -1,4 +1,4 @@
 import { z } from "zod";
-import { userValidation } from "../userValidation.schema";
+import { userSignupValidation } from "../userValidation.schema";
 
-export type UserType = z.infer<typeof userValidation>
+export type UserType = z.infer<typeof userSignupValidation>

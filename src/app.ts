@@ -15,6 +15,7 @@ const swaggerDocument = require("../public/swagger.json");
 const app: Application = express();
 import dotenv from 'dotenv'
 import { Route } from "./routes/v1/users.route";
+import GoogleRoute from "./routes/v1/google.route";
 
 dotenv.config( { path: 'configs/.env'})
 // Global Middleware
@@ -56,15 +57,13 @@ app.use(loggerMiddleware);
 // app.set('views', 'src/views')
 // Set the view engine to Pug
 app.set("view engine", "pug");
-
 // Set the views directory
 app.set("views", path.join(__dirname, "views"));
 
 // Initialize Passport and restore authentication state from session
 
-
-
 const PATH = '/api/v1'
+app.use('/', GoogleRoute)
 app.use(PATH, Route )
 app.get('/', async (req: Request, res: Response) =>{
   res.render('pages/auth')

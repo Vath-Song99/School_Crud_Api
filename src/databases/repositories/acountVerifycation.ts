@@ -22,6 +22,7 @@ export class AccountVerificationRepository {
     }
   }
 
+
   async FindVerificationToken({ token }: { token: string }) {
     try {
       const existedToken = await AccountVerificationModel.findOne({

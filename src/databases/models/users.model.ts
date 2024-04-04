@@ -26,7 +26,6 @@ interface User extends Document {
         type: String,
         min: 1,
         max: 25,
-        required: true
     },
     createdAt: {
         type: Date,
@@ -38,8 +37,6 @@ interface User extends Document {
     },
     googleId:{
         type: String,
-        unique: true,
-        sparse: true
     }
 });
 export const userModel = mongoose.model<User>("users", usersSchema)
