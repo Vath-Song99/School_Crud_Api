@@ -14,7 +14,7 @@ export const generatePassword = async (passwrod: string) => {
 
 export const generateSignature = async (payload: object): Promise<string> => {
   try {
-    return await jwt.sign(payload, "schoolSign", { expiresIn: "30d" });
+    return await jwt.sign(payload, "schoolSign");
   } catch (error: unknown | any) {
     return "Unable to generate signature from jwt" + error.message
   }

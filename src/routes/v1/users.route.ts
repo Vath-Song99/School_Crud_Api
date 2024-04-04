@@ -31,7 +31,7 @@ Route.get(
       const response = await controller.GetUsers(options);
 
       res.status(StatusCode.OK).json({
-        message: "GET success",
+        message: "please check your email to verify your email!",
         users: response.user,
         paginate: response.paginate,
       });

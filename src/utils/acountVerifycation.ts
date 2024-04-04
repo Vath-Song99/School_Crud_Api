@@ -5,7 +5,9 @@ export function generateEmailVerificationToken(): string {
 }
 
 export function generateExpireTime(): Date {
-  const curentTime = new Date();
-  curentTime.setSeconds(curentTime.getSeconds() + 60);
-  return curentTime;
+  const currentTime = new Date();
+  const expireTime = new Date(currentTime.getTime()); // Clone the current time
+  expireTime.setSeconds(expireTime.getSeconds() + 10); // Add 60 seconds to the cloned time
+  return expireTime;
 }
+

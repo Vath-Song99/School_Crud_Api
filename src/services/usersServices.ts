@@ -128,24 +128,38 @@ class UsersServices {
   }
 
   async VerifyEmailToken({ token }: { token: string }) {
-    const isTokenExist =
-      await this.accountVerificationRepo.FindVerificationToken({ token });
-
+    const isTokenExist = await this.accountVerificationRepo.FindVerificationToken({ token });
+    const emailVerificationToken = generateEmailVerificationToken();
+    const expireTime = generateExpireTime();
     if (!isTokenExist) {
       throw new APIError(
         "Verification token is invalid",
         StatusCode.BadRequest
       );
     }
-    if (new Date() > isTokenExist.expireAt) {
-      throw new ClientError("token url is expired", StatusCode.BadRequest);
-    }
+
     // Find the user associated with this token
     const user = await this.repository.getUserById(
       isTokenExist.userId.toString()
     );
     if (!user) {
       throw new APIError("User does not exist.", StatusCode.NotFound);
+    }
+
+    if (new Date() > isTokenExist.expireAt) {
+      await AccountVerificationModel.updateOne({userId: isTokenExist.userId}, {
+        emailVerificationToken: emailVerificationToken,
+        expireAt: expireTime,
+      })
+      const emailSender = EmailSender.getInstance();
+      emailSender.sendSignUpVerificationEmail({
+        toEmail: user.email,
+        emailVerificationToken: emailVerificationToken,
+      });
+      throw new ClientError(
+        "your email token was expire, please request new token",
+        StatusCode.BadRequest
+      );
     }
 
     // Mark the user's email as verified
