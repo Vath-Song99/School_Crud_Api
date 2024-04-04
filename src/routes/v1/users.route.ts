@@ -68,10 +68,11 @@ Route.post(
     try {
       const controller = new UserControllers();
       const requestBody = req.body;
-      await controller.Signup(requestBody);
+      const user = await controller.Signup(requestBody);
 
       res.status(StatusCode.Created).json({
         message: "POST success",
+        expireAt: user.expireAt
       });
     } catch (error: unknown) {
       _next(error);
@@ -90,6 +91,7 @@ Route.post(
 
       res.status(StatusCode.OK).json({
         message: "LOGIN success",
+        
       });
     } catch (error: unknown) {
       _next(error);

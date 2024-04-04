@@ -81,8 +81,8 @@ class UsersServices {
       const { _id } = newUser;
       const token = await generateSignature({ email, _id: _id });
 
-      await this.SendVerifyEmailToken({ userId: newUser._id });
-      return { user: newUser, token };
+      const expireUser = await this.SendVerifyEmailToken({ userId: newUser._id });
+      return { user: newUser, token , expireAt: expireUser};
     } catch (error: unknown) {
       throw error;
     }
@@ -122,6 +122,7 @@ class UsersServices {
         toEmail: existedUser.email,
         emailVerificationToken: newAccountVerification.emailVerificationToken,
       });
+      return expireTime
     } catch (error) {
       throw error;
     }

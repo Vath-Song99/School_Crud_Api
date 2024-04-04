@@ -12,7 +12,7 @@ import {
   SuccessResponse,
   Middlewares,
 } from "tsoa";
-import { UserControllerType } from "./@types/userController";
+import { SingupUser, UserControllerType } from "./@types/userController";
 import { LoginType, Options } from "../routes/@types/userRoute";
 import { StatusCode } from "../utils/consts";
 import { generateSignature } from "../utils/JWT";
@@ -24,13 +24,16 @@ import {
 } from "../schemas/userValidation.schema";
 import { validateMongooseId } from "../middlewares/mongoose";
 
+
+
+
 @Route("/api/v1")
 export class UserControllers {
   @Post("/auth/signup")
   @Middlewares(validateUser(userSignupValidation))
   public async Signup(
     @Body() requestBody: UserControllerType
-  ): Promise<UserControllerType> {
+  ): Promise<SingupUser> {
     try {
       const { username, email, password } = requestBody;
 
@@ -40,7 +43,7 @@ export class UserControllers {
         email,
         password,
       });
-      return newUser.user;
+      return newUser;
     } catch (error: unknown) {
       throw error;
     }
