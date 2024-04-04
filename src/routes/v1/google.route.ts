@@ -36,7 +36,6 @@ GoogleRoute.get(
   
           res.status(StatusCode.OK).json({
             message: "Sigin success",
-            user: userInfoResponse.newUser,
             token: userInfoResponse?.accessToken,
           });
         } catch (error: unknown) {

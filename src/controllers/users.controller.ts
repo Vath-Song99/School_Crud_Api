@@ -24,9 +24,6 @@ import {
 } from "../schemas/userValidation.schema";
 import { validateMongooseId } from "../middlewares/mongoose";
 
-
-
-
 @Route("/api/v1")
 export class UserControllers {
   @Post("/auth/signup")
