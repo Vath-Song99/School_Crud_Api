@@ -10,7 +10,6 @@ import { ZodSchema } from "zod";
 import { StatusCode } from "../../utils/consts";
 import { PATH_ROUTE } from "./userDefs";
 import { Options } from "../@types/userRoute";
-import { authConfigUrl } from "../../utils/googleConfig";
 
 const Schema: ZodSchema = userSignupValidation;
 const Route = express.Router();

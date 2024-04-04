@@ -154,6 +154,13 @@ export class UserControllers {
 
   @SuccessResponse(StatusCode.OK, "OK")
   @Get(PATH_ROUTE.PATH_GOOGLE)
+  public async GoogleAuthSignin() {
+      
+  }
+
+
+  @SuccessResponse(StatusCode.OK, "OK")
+  @Get(PATH_ROUTE.PATH_GOOGLE)
   public async GoogleAuthCallBack(code: string) {
     try {
       const userService = new UsersServices();

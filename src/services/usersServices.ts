@@ -16,7 +16,7 @@ import EmailSender from "../utils/emailSender";
 import { AccountVerificationRepository } from "../databases/repositories/acountVerifycation";
 import { StatusCode } from "../utils/consts";
 import { BaseCustomError } from "../errors/baseCustomError";
-import { acccInfor, googleSinginConfig } from "../utils/googleConfig";
+import { GoogleConfig } from "../utils/googleConfig";
 import { ClientError } from "../errors/clientError";
 import { DuplicateError } from "../errors/duplicateError";
 
@@ -81,8 +81,10 @@ class UsersServices {
       const { _id } = newUser;
       const token = await generateSignature({ email, _id: _id });
 
-      const expireUser = await this.SendVerifyEmailToken({ userId: newUser._id });
-      return { user: newUser, token , expireAt: expireUser};
+      const expireUser = await this.SendVerifyEmailToken({
+        userId: newUser._id,
+      });
+      return { user: newUser, token, expireAt: expireUser };
     } catch (error: unknown) {
       throw error;
     }
@@ -122,14 +124,15 @@ class UsersServices {
         toEmail: existedUser.email,
         emailVerificationToken: newAccountVerification.emailVerificationToken,
       });
-      return expireTime
+      return expireTime;
     } catch (error) {
       throw error;
     }
   }
 
   async VerifyEmailToken({ token }: { token: string }) {
-    const isTokenExist = await this.accountVerificationRepo.FindVerificationToken({ token });
+    const isTokenExist =
+      await this.accountVerificationRepo.FindVerificationToken({ token });
     const emailVerificationToken = generateEmailVerificationToken();
     const expireTime = generateExpireTime();
     if (!isTokenExist) {
@@ -148,10 +151,13 @@ class UsersServices {
     }
 
     if (new Date() > isTokenExist.expireAt) {
-      await AccountVerificationModel.updateOne({userId: isTokenExist.userId}, {
-        emailVerificationToken: emailVerificationToken,
-        expireAt: expireTime,
-      })
+      await AccountVerificationModel.updateOne(
+        { userId: isTokenExist.userId },
+        {
+          emailVerificationToken: emailVerificationToken,
+          expireAt: expireTime,
+        }
+      );
       const emailSender = EmailSender.getInstance();
       emailSender.sendSignUpVerificationEmail({
         toEmail: user.email,
@@ -237,12 +243,13 @@ class UsersServices {
 
     try {
       // step 1
-      const tokenResponse = await googleSinginConfig(code);
+      const googleConfig = await GoogleConfig.getInstance();
+      const tokenResponse = await googleConfig.GoogleSigninConfig(code);
 
       // step 2
       const accessToken = tokenResponse.access_token;
       // step 3
-      const userInfoResponse = await acccInfor(accessToken);
+      const userInfoResponse = await googleConfig.AccessInfo(accessToken);
 
       // stept 4
       const { name, email, id, verified_email } = userInfoResponse?.data;
