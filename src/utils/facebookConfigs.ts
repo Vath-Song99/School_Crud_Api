@@ -16,15 +16,15 @@ export class GoogleConfig {
     return GoogleConfig.instance;
   }
 
-  public async GoogleSigninConfig(code: string){
+  public async GoogleStrategy(code: string){
     try{
       const tokenResponse = await axios.post(
         "https://oauth2.googleapis.com/token",
         {
           code,
-          client_id: process.env.GOOGLE_CLIENT_ID as string ,
-          client_secret: process.env.GOOGLE_CLIENT_SECRET as string ,
-          redirect_uri: process.env.REDIRECT_URL as string,
+          client_id: process.env.FACEBOOK_CLIENT_ID as string ,
+          client_secret: process.env.FACEBOOK_CLIENT_SECRET as string ,
+          redirect_uri: process.env.FACEBOOK_REDIRECT_URL as string,
           grant_type: 'authorization_code'
         }
       );

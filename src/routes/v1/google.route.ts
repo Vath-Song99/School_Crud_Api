@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { NextFunction , Request , Response } from "express";
 import { PATH_ROUTE } from "./userDefs";
-import { GoogleConfig } from "../../utils/googleConfig";
+import { GoogleConfig } from "../../utils/googleConfigs";
 import { UserControllers } from "../../controllers/users.controller";
 import { StatusCode } from "../../utils/consts";
 
@@ -12,7 +12,7 @@ GoogleRoute.get(
     PATH_ROUTE.PATH_GOOGLE,
     async (req: Request, res: Response, _next: NextFunction) => {
       try {
-        const redirectUri = process.env.REDIRECT_URL as string;
+        const redirectUri = process.env.GOOGLE_REDIRECT_URL as string;
         const clienId = process.env.GOOGLE_CLIENT_ID as string;
         
         const googleConfig = await GoogleConfig.getInstance()

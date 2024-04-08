@@ -14,11 +14,12 @@ const app: Application = express();
 import dotenv from "dotenv";
 import { Route } from "./routes/v1/users.route";
 import GoogleRoute from "./routes/v1/google.route";
+import FacebookRouter from "./routes/v1/facebook.route";
 
 dotenv.config({ path: "configs/.env" });
 // Global Middleware
 app.use(express.json());
-app.use(express.static("public"));
+// app.use(express.static("public"));
 app.use(cors());
 app.use(morgan("tiny"));
 app.use(requestTimeMiddleware);
@@ -57,15 +58,17 @@ app.use(loggerMiddleware);
 app.set("view engine", "pug");
 // Set the views directory
 app.set("views", path.join(__dirname, "views"));
+app.get("/auth", async (req: Request, res: Response) => {
+  res.render("pages/auth");
+});
 
 // Initialize Passport and restore authentication state from session
 
 const PATH = "/api/v1";
 app.use("/", GoogleRoute);
+app.use("/", FacebookRouter);
 app.use(PATH, Route);
-app.get("/", async (req: Request, res: Response) => {
-  res.render("pages/auth");
-});
+
 // RegisterRoutes(app);
 
 // Catch-all route for handling unknown routes

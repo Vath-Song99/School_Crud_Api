@@ -16,7 +16,7 @@ import EmailSender from "../utils/emailSender";
 import { AccountVerificationRepository } from "../databases/repositories/acountVerifycation";
 import { StatusCode } from "../utils/consts";
 import { BaseCustomError } from "../errors/baseCustomError";
-import { GoogleConfig } from "../utils/googleConfig";
+import { GoogleConfig } from "../utils/googleConfigs";
 import { ClientError } from "../errors/clientError";
 import { DuplicateError } from "../errors/duplicateError";
 
@@ -244,7 +244,7 @@ class UsersServices {
     try {
       // step 1
       const googleConfig = await GoogleConfig.getInstance();
-      const tokenResponse = await googleConfig.GoogleSigninConfig(code);
+      const tokenResponse = await googleConfig.GoogleStrategy(code);
 
       // step 2
       const accessToken = tokenResponse.access_token;
