@@ -4,3 +4,8 @@ export interface GoogleUserType{
     id: string; 
     verified_email: boolean;
 }
+
+export interface FacebookUsertype{
+    name: string;
+    id: string
+}

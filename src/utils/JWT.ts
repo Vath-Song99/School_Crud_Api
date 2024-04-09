@@ -1,6 +1,7 @@
 import APIError from "../errors/apiError";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const salt = 10;
 
@@ -12,7 +13,7 @@ export const generatePassword = async (passwrod: string) => {
   }
 };
 
-export const generateSignature = async (payload: object): Promise<string> => {
+export const generateSignature = async (payload: string): Promise<string> => {
   try {
     return await jwt.sign(payload, "schoolSign");
   } catch (error: unknown | any) {

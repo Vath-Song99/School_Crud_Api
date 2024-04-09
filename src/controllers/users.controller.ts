@@ -56,9 +56,7 @@ export class UserControllers {
       const user = await userService.VerifyEmailToken({ token });
 
       // Generate JWT for the verified user
-      const jwtToken = await generateSignature({
-        userId: user._id,
-      });
+      const jwtToken = await generateSignature(user._id);
 
       return { token: jwtToken };
     } catch (error) {
@@ -154,10 +152,10 @@ export class UserControllers {
 
   @SuccessResponse(StatusCode.OK, "OK")
   @Get(PATH_ROUTE.PATH_GOOGLE)
+  @Middlewares()
   public async GoogleAuthSignin() {
       
   }
-
 
   @SuccessResponse(StatusCode.OK, "OK")
   @Get(PATH_ROUTE.PATH_GOOGLE)
@@ -171,4 +169,17 @@ export class UserControllers {
       throw error;
     }
   }
+
+  @SuccessResponse(StatusCode.OK, "OK")
+  public async FacebookAuthSigninCallBack(code: string){
+    try{
+      const userService =  new UsersServices();
+      const user = await userService.SigninWithFacebookCallBack(code);
+
+      return user
+    }catch(error: unknown){
+      throw error
+    }
+  }
+
 }

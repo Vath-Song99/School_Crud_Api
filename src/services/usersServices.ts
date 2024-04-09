@@ -19,6 +19,7 @@ import { BaseCustomError } from "../errors/baseCustomError";
 import { GoogleConfig } from "../utils/googleConfigs";
 import { ClientError } from "../errors/clientError";
 import { DuplicateError } from "../errors/duplicateError";
+import { FacebookConfig } from "../utils/facebookConfigs";
 
 class UsersServices {
   private repository: UsersRepository;
@@ -79,7 +80,7 @@ class UsersServices {
       });
       // step 4
       const { _id } = newUser;
-      const token = await generateSignature({ email, _id: _id });
+      const token = await generateSignature(_id);
 
       const expireUser = await this.SendVerifyEmailToken({
         userId: newUser._id,
@@ -223,7 +224,7 @@ class UsersServices {
         );
       }
       // step 3
-      const token = await generateSignature({ username: user.username });
+      const token = await generateSignature(user._id);
       // const token = jwt.sign({ username: user.username }, 'secret', { expiresIn: '1h' });
 
       return { user, token };
@@ -239,6 +240,7 @@ class UsersServices {
     // 3. Use the access token to access user info from Google APIs
     // 4. find you that exist in database
     // 5. create new user to database
+    // 6. generate jwt token
     //************************ */
 
     try {
@@ -269,12 +271,45 @@ class UsersServices {
         id,
         verified_email,
       });
-      return { newUser, accessToken };
+      // step 6
+      const jwtToken = await generateSignature(id);
+      return { newUser, jwtToken };
     } catch (error: unknown) {
       if (error instanceof BaseCustomError) {
         throw error;
       }
       throw new APIError("Unable to Singin with google");
+    }
+  }
+
+  async SigninWithFacebookCallBack(code: string) {
+    //********************* */\
+    // 1. config facebook strategy
+    // 2. destruce access_token from data
+    // 3. access data from facebook api
+    // 4. create user into database
+    // 5. generate jwt token for user
+    //*********************** */
+    try {
+      // step 1
+      const config = await FacebookConfig.getInstance();
+      const data: any = await config.FacebookStrategy(code);
+
+      // step 2
+      const { access_token } = data;
+
+      // step 3
+      const profile = await config.AccessInfo(access_token);
+      console.log(profile)
+      // step 4
+      const user = await this.repository.createFacebookUser(profile);
+
+      // step 5
+      const jwtToken = await generateSignature(user._id)
+
+      return {profile , jwtToken}
+    } catch (error: unknown) {
+      throw error;
     }
   }
 }

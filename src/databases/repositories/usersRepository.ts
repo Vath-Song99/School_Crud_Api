@@ -6,7 +6,7 @@ import { DuplicateError } from "../../errors/duplicateError";
 import {  Options } from "../../routes/@types/userRoute";
 import { PaginateType } from "../@types/repository";
 import { userModel } from "../models/users.model";
-import { GoogleUserType } from "./@types/userRepo";
+import { FacebookUsertype, GoogleUserType } from "./@types/userRepo";
 
 class UsersRepository {
   async getUserById(id: string): Promise<any> {
@@ -85,6 +85,22 @@ class UsersRepository {
       }catch(error: unknown){
         throw error
       }
+  }
+
+  async createFacebookUser (user: FacebookUsertype){
+    try{
+      const {id , name} = user
+      const userCreated = await userModel.create({
+        facebookId: id,
+        username: name
+      });
+      if(!userCreated){
+        throw new APIError("Unable to create facebook user")
+      }
+      return await userCreated.save()
+    }catch(error: unknown){
+      throw error
+    }
   }
 
   async getUserByEmail({ email }: { email: string }) {

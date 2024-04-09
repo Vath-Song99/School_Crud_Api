@@ -7,6 +7,7 @@ interface User extends Document {
     createdAt: Date;
     isVerified: boolean,
     googleId: string;
+    facebookId: string
 }
 
  const usersSchema: Schema<User> = new Schema<User>({
@@ -37,6 +38,9 @@ interface User extends Document {
     },
     googleId:{
         type: String,
+    },
+    facebookId:{
+        type: String
     }
 });
 export const userModel = mongoose.model<User>("users", usersSchema)
